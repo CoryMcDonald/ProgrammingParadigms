@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -43,8 +44,17 @@ class BoggleGUI {
     private JPanel userInput = new JPanel(new GridLayout(3,1));
     private JPanel boggleBoard = new JPanel(new GridLayout(4,4));
     private JPanel boggleBoardContainer = new JPanel(new GridLayout(1,2));
-    private JPanel EnterLabelPanel = new JPanel(new GridLayout(1,1));
     private JPanel TimerAndBoggleLabel = new JPanel(new GridLayout(2,1));
+
+    public static void main(String[] args) {
+        try 
+		{            
+			BoggleGUI b = new BoggleGUI();  			
+        } catch(Exception ex) 
+		{
+        	JOptionPane.showMessageDialog(new JFrame(), "Critical Error! " + ex.toString());
+        }
+    }
     
     BoggleGUI() 
     {
@@ -134,9 +144,9 @@ class BoggleGUI {
 	public void generateBoggleBoard()
 	{
         Random random = new Random();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray(); //Grabbing the available characters
         StringBuilder sb = new StringBuilder();		
+        //For each letter configure how it looks and then add it to the boggle board
         for (int i = 0; i < 16; i++) {
             char c = chars[random.nextInt(chars.length)];
             final JLabel diceCharacter = new JLabel(String.valueOf(c).toUpperCase());
@@ -149,7 +159,7 @@ class BoggleGUI {
         dice = sb.toString();
         dice = dice.toUpperCase();
         
-        //Calls the previous assignment
+        //Generates the solutions once the boggle board is loaded
         generateSolutions();
 	}
 	
@@ -193,34 +203,25 @@ class BoggleGUI {
         return false;
     }
 
-    public static void main(String[] args) {
-        try 
-		{
-            
-			BoggleGUI b = new BoggleGUI();  
-			
-        } catch(Exception ex) 
-		{
-            System.out.println(ex.toString());
-        }
-    }
     public void generateSolutions()
     {
-        try{
-        Scanner s = new Scanner(new File("lexicon.txt"));
-        while(s.hasNextLine()) {
-            String word = s.nextLine();
-            //Really we should check if the word has more than 3 char because that's how the game is played
-            if(isFound(word))
-            {
-                results.add(word);
-                totalWords++;
-            }
-        }
-        }catch(Exception ex)
+        try
         {
-        	 JOptionPane.showMessageDialog(new JFrame()
-             , "Exception while generating solutions " + ex.toString());
+	        Scanner s = new Scanner(new File("lexicon.txt"));
+	        while(s.hasNextLine()) {
+	            String word = s.nextLine();
+	            //Really we should check if the word has more than 3 char because that's how the game is played
+	            if(isFound(word))
+	            {
+	                results.add(word);
+	                totalWords++;
+	            }
+	        }
+        }catch(IOException ex)
+        {
+        	JOptionPane.showMessageDialog(new JFrame(), "Sorry, could locate lexicon.txt" , 
+        			"Error", JOptionPane.ERROR_MESSAGE);
+        	System.exit(0); //Closing out the applications once they accept that it could not load lexicon
         }
     }
 }
