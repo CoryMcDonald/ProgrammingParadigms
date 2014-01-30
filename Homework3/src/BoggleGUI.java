@@ -1,11 +1,16 @@
-import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.io.File;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Timer;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+import java.io.File;
+
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 class BoggleGUI {
@@ -21,34 +26,36 @@ class BoggleGUI {
 
     private static ArrayList<String> results = new ArrayList<String>();
 
-    BoggleGUI() {
+    private JFrame frame = new JFrame("Boggle");
+    
+    private JLabel LabelTimer = new JLabel("00:00", SwingConstants.CENTER);
+    private JLabel BoggleLabel = new JLabel("Boggle");
+    private JLabel EnterWordsLabel = new JLabel("Enter Words Here");
+
+    private SimpleDateFormat TIME = new SimpleDateFormat("mm:ss");
+
+    private JButton BeginButton = new JButton("Begin");
+    private JButton SubmitButton = new JButton("Done");
+    private JTextArea WordInput = new JTextArea("");
+    
+    private JScrollPane WordInputScroll = new JScrollPane(WordInput);
+    
+    private JPanel userInput = new JPanel(new GridLayout(3,1));
+    private JPanel boggleBoard = new JPanel(new GridLayout(4,4));
+    private JPanel boggleBoardContainer = new JPanel(new GridLayout(1,2));
+    private JPanel EnterLabelPanel = new JPanel(new GridLayout(1,1));
+    private JPanel TimerAndBoggleLabel = new JPanel(new GridLayout(2,1));
+    
+    BoggleGUI() 
+    {
         createAndShowGUI();
     }
     private void createAndShowGUI()
     {
-        final JFrame frame = new JFrame("Boggle");
-
-        final JLabel LabelTimer = new JLabel("00:00", SwingConstants.CENTER);
-        JLabel BoggleLabel = new JLabel("Boggle");
-        final JLabel EnterWordsLabel = new JLabel("Enter Words Here");
-
-        final SimpleDateFormat TIME = new SimpleDateFormat("mm:ss");
-
-        final JButton BeginButton = new JButton("Begin");
-        final JButton SubmitButton = new JButton("Done");
-
-        final JTextArea WordInput = new JTextArea("");
         WordInput.setEditable(false);
 
         //Boggle Board stuff for representing letters
-        final JPanel userInput = new JPanel(new GridLayout(3,1));
-        JPanel boggleBoard = new JPanel(new GridLayout(4,4));
-        JPanel boggleBoardContainer = new JPanel(new GridLayout(1,2));
-        JPanel EnterLabelPanel = new JPanel(new GridLayout(1,1));
-        JPanel TimerAndBoggleLabel = new JPanel(new GridLayout(2,1));
-
-        JScrollPane WordInputScroll = new JScrollPane(WordInput);
-
+     
         LabelTimer.setFont(new Font("Arial", Font.PLAIN, 24));
         BoggleLabel.setVerticalAlignment(SwingConstants.BOTTOM);
         BoggleLabel.setFont(new Font("Arial", Font.PLAIN, 24));
@@ -61,24 +68,10 @@ class BoggleGUI {
                 frame.repaint();
             }
         });
+       
+        generateBoggleBoard();
 
-        //http://stackoverflow.com/questions/5683327/how-to-generate-a-random-string-of-20-characters
-        Random random = new Random();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            final JLabel diceCharacter = new JLabel(String.valueOf(c).toUpperCase());
-            diceCharacter.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            diceCharacter.setHorizontalAlignment(SwingConstants.CENTER);
-            diceCharacter.setFont(new Font("Arial", Font.PLAIN, 24));
-            sb.append(c);
-            boggleBoard.add(diceCharacter);
-        }
-        dice = sb.toString();
-        dice = dice.toUpperCase();
-        generateSolutions();
-
+        //todo Functionalize this (prevent anonymous function)
         BeginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt)
             {
@@ -118,7 +111,9 @@ class BoggleGUI {
         BoggleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         TimerAndBoggleLabel.add(BoggleLabel);
         TimerAndBoggleLabel.add(LabelTimer);
+        
         EnterWordsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+        
         userInput.add(EnterWordsLabel);
         userInput.add(WordInputScroll);
         userInput.add(BeginButton);
@@ -128,14 +123,36 @@ class BoggleGUI {
         boggleBoardContainer.add(TimerAndBoggleLabel);
 
         frame.add(boggleBoardContainer);
-//        frame.add(TimerAndBoggleLabel);
         frame.add(userInput);
+        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new GridLayout(2, 1, 5, 5));
         frame.setSize(400, 400);
         frame.setVisible(true);
     }
-
+	
+	public void generateBoggleBoard()
+	{
+        Random random = new Random();
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        
+        StringBuilder sb = new StringBuilder();		
+        for (int i = 0; i < 16; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            final JLabel diceCharacter = new JLabel(String.valueOf(c).toUpperCase());
+            diceCharacter.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            diceCharacter.setHorizontalAlignment(SwingConstants.CENTER);
+            diceCharacter.setFont(new Font("Arial", Font.PLAIN, 24));
+            sb.append(c);
+            boggleBoard.add(diceCharacter);
+        }
+        dice = sb.toString();
+        dice = dice.toUpperCase();
+        
+        //Calls the previous assignment
+        generateSolutions();
+	}
+	
     public boolean check(int x, int y, String remainder) {
         if(remainder.length() >= 0)
         {
@@ -144,7 +161,7 @@ class BoggleGUI {
                 if(remainder.length() > 1)
                 {
                     used[4*y+x] = true;
-                    for (int dx = x-1; dx <= x+1; dx++)  {
+                    for (int dx = x-1; dx <= x+1; dx++) {
                         for (int dy = y-1; dy <= y+1; dy++) {
                             if (dx >= 0 && dy >= 0 && dx < 4 && dy < 4 && !used[4*dy+dx]) {
                                 if(check(dx,dy, remainder.substring(1))) {
@@ -157,9 +174,7 @@ class BoggleGUI {
                 {
                     return true;
                 }
-            } else {
-                return false;
-            }
+            } 
         }
         return false;
     }
@@ -179,11 +194,13 @@ class BoggleGUI {
     }
 
     public static void main(String[] args) {
-        try {
-
-            BoggleGUI b = new BoggleGUI(); //For later comparision
-
-        } catch(Exception ex) {
+        try 
+		{
+            
+			BoggleGUI b = new BoggleGUI();  
+			
+        } catch(Exception ex) 
+		{
             System.out.println(ex.toString());
         }
     }
@@ -202,7 +219,8 @@ class BoggleGUI {
         }
         }catch(Exception ex)
         {
-            System.out.println("Exception while generating solutions " + ex.toString());
+        	 JOptionPane.showMessageDialog(new JFrame()
+             , "Exception while generating solutions " + ex.toString());
         }
     }
 }
