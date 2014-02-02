@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYSIS_IN_BACKGROUND" value="true" />
+  </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/BoggleGUI.java" line="10" />
-    <bookmark url="file://$PROJECT_DIR$/src/BoggleGUI.java" line="149" />
+    <bookmark url="file://$PROJECT_DIR$/src/BoggleGUI.java" line="164" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="76e9146d-e71f-4c5e-88d3-1bba75992644" name="Default" comment="" />
@@ -72,11 +75,13 @@
       <file leaf-file-name="BoggleGUI.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/BoggleGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="36" selection-start="2603" selection-end="2603" vertical-scroll-proportion="0.20473774" vertical-offset="1018" max-vertical-offset="3536">
+            <state line="189" column="7" selection-start="6714" selection-end="6714" vertical-scroll-proportion="0.22902495" vertical-offset="3112" max-vertical-offset="4369">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#652#660#0" expanded="true" />
-                <element signature="e#3748#3756#0" expanded="true" />
+                <element signature="e#769#777#0" expanded="true" />
+                <element signature="e#2621#2877#0" expanded="true" />
+                <element signature="e#2866#2867#0" expanded="true" />
+                <element signature="e#4512#4520#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -130,7 +135,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -165,7 +170,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -183,6 +188,11 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="SearchEverywhereHistory" value="" />
+    <property name="options.lastSelected" value="preferences.sourceCode.Java" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -246,6 +256,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -271,19 +294,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -412,23 +422,23 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284553" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.398374" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284553" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32520324" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15883306" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24320242" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32520324" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1397281" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2406504" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284553" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32520324" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
@@ -459,11 +469,26 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/BoggleGUI.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="36" selection-start="2210" selection-end="2210" vertical-scroll-proportion="0.0" vertical-offset="1173" max-vertical-offset="3961">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/BoggleGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state line="69" column="36" selection-start="2603" selection-end="2603" vertical-scroll-proportion="0.0" vertical-offset="1052" max-vertical-offset="3621">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -473,8 +498,10 @@
         <state line="33" column="33" selection-start="1011" selection-end="1011" vertical-scroll-proportion="0.0" vertical-offset="327" max-vertical-offset="1428">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -484,8 +511,10 @@
         <state line="73" column="12" selection-start="2175" selection-end="2175" vertical-scroll-proportion="0.0" vertical-offset="1041" max-vertical-offset="1428">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -495,8 +524,10 @@
         <state line="22" column="0" selection-start="540" selection-end="540" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1700">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -511,8 +542,10 @@
         <state line="12" column="0" selection-start="321" selection-end="321" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1700">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -527,8 +560,10 @@
         <state line="20" column="28" selection-start="483" selection-end="483" vertical-scroll-proportion="0.0" vertical-offset="340" max-vertical-offset="1751">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -543,8 +578,10 @@
         <state line="80" column="0" selection-start="2716" selection-end="2716" vertical-scroll-proportion="0.0" vertical-offset="1232" max-vertical-offset="1751">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -583,11 +620,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/BoggleGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="36" selection-start="2603" selection-end="2603" vertical-scroll-proportion="0.20473774" vertical-offset="1018" max-vertical-offset="3536">
+        <state line="189" column="7" selection-start="6714" selection-end="6714" vertical-scroll-proportion="0.22902495" vertical-offset="3112" max-vertical-offset="4369">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#652#660#0" expanded="true" />
-            <element signature="e#3748#3756#0" expanded="true" />
+            <element signature="e#769#777#0" expanded="true" />
+            <element signature="e#2621#2877#0" expanded="true" />
+            <element signature="e#2866#2867#0" expanded="true" />
+            <element signature="e#4512#4520#0" expanded="true" />
           </folding>
         </state>
       </provider>
