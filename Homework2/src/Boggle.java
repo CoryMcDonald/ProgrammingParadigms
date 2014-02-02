@@ -65,15 +65,16 @@ class Boggle {
     public static void main(String[] args) {
         try {
             Boggle b = new Boggle(args[0].toUpperCase()); //For later comparision
-            Scanner s = new Scanner(new File("lexicon.txt"));
-            while(s.hasNextLine()) {
-                String word = s.nextLine();
-                //Really we should check if the word has more than 3 char because that's how the game is played
-                if(b.isFound(word))
-                    System.out.println(word);
-            }
+            throw new IndexOutOfBoundsException();
+//            Scanner s = new Scanner(new File("lexicon.txt"));
+//            while(s.hasNextLine()) {
+//                String word = s.nextLine();
+//                //Really we should check if the word has more than 3 char because that's how the game is played
+//                if(b.isFound(word))
+//                    System.out.println(word);
+//            }
         } catch(Exception ex) {
-            System.out.println(ex.toString());
+            System.out.println(ex.toString() + "\tRemainder: ");
         }
     }
 }
