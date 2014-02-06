@@ -145,7 +145,15 @@ class BoggleGUI implements ActionListener
                     }
                 }
             }
-
+            
+            if(userResults.size() > 0 && userResults.get(0).equals(""))
+            {
+            	InvalidWords = 0;            	
+            }else
+            {
+            	InvalidWords = userResults.size();
+            }
+            
             JOptionPane.showMessageDialog(new JFrame()
                     , "Elapsed Time: " + (EndTime - BeginTime) / 1000 + " seconds \n" +
                     "Words Correct: " + ValidWords + "\n" +
