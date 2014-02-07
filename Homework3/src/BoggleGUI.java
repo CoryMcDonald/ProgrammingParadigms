@@ -21,11 +21,13 @@ class BoggleGUI implements ActionListener
 
     private long BeginTime;
     private long EndTime;
-    private static int TimeElapsed = 0;
-    private static int TotalWords = 0;
-    private static int ValidWords = 0;
+    private int InvalidWords = 0;
+    private int TimeElapsed = 0;
+    private int TotalWords = 0;
+    private int ValidWords = 0;
 
     private static ArrayList<String> Solutions = new ArrayList<String>();
+    private static ArrayList<String> Dictionary = new ArrayList<String>();
 
     private JFrame Frame = new JFrame("Boggle");
 
@@ -51,11 +53,16 @@ class BoggleGUI implements ActionListener
     {
         try
         {
+            Scanner s = new Scanner(new File("lexicon.txt"));
+            while (s.hasNextLine())
+            {
+                Dictionary.add(s.nextLine());
+            }
             new BoggleGUI();
         }
         catch (Exception ex)
         {
-            //Sorry, I am an awful programmer for using try/catch (Bad habit forced by code reviews :) )
+            //Hey, at least I display the error!
             JOptionPane.showMessageDialog(new JFrame(), "Critical Error! " + ex.toString());
         }
     }
@@ -87,7 +94,6 @@ class BoggleGUI implements ActionListener
                 Frame.repaint();
             }
         });
-
         //Generates a random string of 16 characters and places the label on the board
         generateBoggleBoard();
 
@@ -127,6 +133,9 @@ class BoggleGUI implements ActionListener
             BeginButton.setText("Done");
             WordInput.setEditable(true);
             WordInput.requestFocus();
+            TimeElapsed = 0;
+            ValidWords = 0;
+            Timer.restart();
             Timer.start();
         }
         else
@@ -158,9 +167,12 @@ class BoggleGUI implements ActionListener
                     , "Elapsed Time: " + (EndTime - BeginTime) / 1000 + " seconds \n" +
                     "Words Correct: " + ValidWords + "\n" +
                     "Words Possible: " + Solutions.size() + "\n" +
-                    "Words not found by computer " + (userResults.size() - ValidWords));
+                    "Words not found by computer " + (InvalidWords - ValidWords));
             WordInput.setEditable(false);
-            BeginButton.setEnabled(false);
+            BeginButton.setText("Begin");
+            BoggleBoard.removeAll();
+            WordInput.setText("");
+            generateBoggleBoard();
         }
     }
 
@@ -185,27 +197,15 @@ class BoggleGUI implements ActionListener
         //Generates the solutions once the boggle board is loaded
         generateSolutions();
     }
+
     private void generateSolutions()
     {
-        try
-        {
-            Scanner s = new Scanner(new File("lexicon.txt"));
-            while (s.hasNextLine())
+        for(String word : Dictionary){
+            if (isFound(word))
             {
-                String word = s.nextLine();
-                //Really we should check if the word has more than 3 char because that's how the game is played
-                if (isFound(word))
-                {
-                    Solutions.add(word);
-                    TotalWords++;
-                }
+                Solutions.add(word);
+                TotalWords++;
             }
-        }
-        catch (IOException ex)
-        {
-            JOptionPane.showMessageDialog(new JFrame(), "Sorry, could locate lexicon.txt",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0); //Closing out the applications once they accept the msgbox
         }
     }
 
