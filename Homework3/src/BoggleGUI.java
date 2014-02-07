@@ -133,9 +133,6 @@ class BoggleGUI implements ActionListener
             BeginButton.setText("Done");
             WordInput.setEditable(true);
             WordInput.requestFocus();
-            TimeElapsed = 0;
-            ValidWords = 0;
-            Timer.restart();
             Timer.start();
         }
         else
@@ -168,10 +165,15 @@ class BoggleGUI implements ActionListener
                     "Words Correct: " + ValidWords + "\n" +
                     "Words Possible: " + Solutions.size() + "\n" +
                     "Words not found by computer " + (InvalidWords - ValidWords));
+
+            //Reset GUI
             WordInput.setEditable(false);
             BeginButton.setText("Begin");
             BoggleBoard.removeAll();
             WordInput.setText("");
+            TimeElapsed = 0;
+            ValidWords = 0;
+            Timer.restart();
             generateBoggleBoard();
         }
     }

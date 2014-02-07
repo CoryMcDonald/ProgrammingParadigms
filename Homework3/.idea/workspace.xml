@@ -5,7 +5,7 @@
   </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/BoggleGUI.java" line="10" />
-    <bookmark url="file://$PROJECT_DIR$/src/BoggleGUI.java" line="184" />
+    <bookmark url="file://$PROJECT_DIR$/src/BoggleGUI.java" line="186" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="76e9146d-e71f-4c5e-88d3-1bba75992644" name="Default" comment="" />
@@ -75,7 +75,7 @@
       <file leaf-file-name="BoggleGUI.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/BoggleGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="174" column="16" selection-start="5960" selection-end="5960" vertical-scroll-proportion="6.553288" vertical-offset="0" max-vertical-offset="4437">
+            <state line="168" column="23" selection-start="5726" selection-end="5726" vertical-scroll-proportion="2.197279" vertical-offset="1819" max-vertical-offset="4471">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#782#790#0" expanded="true" />
@@ -389,7 +389,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -408,7 +408,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1397281" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2406504" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2406504" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284553" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -600,7 +600,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/BoggleGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="174" column="16" selection-start="5960" selection-end="5960" vertical-scroll-proportion="6.553288" vertical-offset="0" max-vertical-offset="4437">
+        <state line="168" column="23" selection-start="5726" selection-end="5726" vertical-scroll-proportion="2.197279" vertical-offset="1819" max-vertical-offset="4471">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#782#790#0" expanded="true" />
