@@ -322,12 +322,9 @@ class BoggleGUI implements ActionListener
 
     private class AutoCompleteTextField extends JTextArea implements KeyListener
     {
-        JPanel blah = new JPanel();
-
         public AutoCompleteTextField()
         {
             this.addKeyListener(this);
-            Frame.add(blah);
         }
         @Override
         public void keyPressed(KeyEvent e)
@@ -343,16 +340,25 @@ class BoggleGUI implements ActionListener
         @Override
         public void keyReleased(KeyEvent e)
         {
-            blah.removeAll();
-            dictionaryResult = Dictionary.ceiling(this.getText());
-            if(dictionaryResult.contains(this.getText()))
+        public void keyReleased(KeyEvent e)
+        {
+        	String dictionaryResult = Dictionary.ceiling(this.getText());
+        	if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE 
+        			|| e.getKeyCode() == KeyEvent.VK_CONTROL 
+        			|| e.getKeyCode() == KeyEvent.VK_LEFT
+        			|| e.getKeyCode() == KeyEvent.VK_RIGHT
+        			|| e.getKeyCode() == KeyEvent.VK_DELETE)
             {
-                blah.add(new JLabel(dictionaryResult + "\n"));
-            }else
-            {
-                blah.add(new JLabel(this.getText()));
+            	return;            
             }
-            Frame.repaint();
+        	else if(dictionaryResult.contains(this.getText()))
+            {            	
+                int originalLength = this.getText().length();
+                this.setText(dictionaryResult);
+                this.setSelectionStart(originalLength);
+                this.setSelectionEnd(dictionaryResult.length());
+            }
+        }
         }
     }
 }
