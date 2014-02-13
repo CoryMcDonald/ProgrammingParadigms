@@ -1,23 +1,24 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
 import java.io.File;
-import java.io.IOException;
+import java.util.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 class BoggleGUI implements ActionListener
 {
-    private static String Dice = null;
-    private static boolean[] Used = new boolean[16];
+    Boggle boggleBackend;
 
     private long BeginTime;
     private long EndTime;
@@ -26,23 +27,24 @@ class BoggleGUI implements ActionListener
     private int TotalWords = 0;
     private int ValidWords = 0;
 
-    private static ArrayList<String> Solutions = new ArrayList<String>();
-    private static ArrayList<String> Dictionary = new ArrayList<String>();
+    private ArrayList<String> Solutions = new ArrayList<String>();
+    private static TreeSet<String> Dictionary = new TreeSet<String>();
 
-    private JFrame Frame = new JFrame("Boggle");
+    private static JFrame Frame = new JFrame("Boggle");
 
     private JLabel LabelTimer = new JLabel("00:00", SwingConstants.CENTER);
     private JLabel BoggleLabel = new JLabel("Boggle");
     private JLabel EnterWordsLabel = new JLabel("Enter Words Here");
-
+    private JLabel AutoCompleteLabel = new JLabel("Autocomplete");
+    
     private SimpleDateFormat Time = new SimpleDateFormat("mm:ss");
 
     private JButton BeginButton = new JButton("Begin");
-    private JTextArea WordInput = new JTextArea("");
+    private JTextArea WordInput = new JTextArea ("");
 
     private JScrollPane WordInputScroll = new JScrollPane(WordInput);
 
-    private JPanel UserInput = new JPanel(new GridLayout(3, 1));
+    private JPanel UserInput = new JPanel(new GridLayout(3, 2));
     private JPanel BoggleBoard = new JPanel(new GridLayout(4, 4));
     private JPanel BoggleBoardContainer = new JPanel(new GridLayout(1, 2));
     private JPanel TimerAndBoggleLabel = new JPanel(new GridLayout(2, 1));
@@ -53,16 +55,23 @@ class BoggleGUI implements ActionListener
     {
         try
         {
+        	//Reading in file once
             Scanner s = new Scanner(new File("lexicon.txt"));
             while (s.hasNextLine())
             {
                 Dictionary.add(s.nextLine());
             }
             new BoggleGUI();
+
+        }
+        catch (FileNotFoundException ex)
+        {
+        	//If it couldn't find the file then prompt up the error
+            JOptionPane.showMessageDialog(new JFrame(), "Could not find lexicon.txt");
         }
         catch (Exception ex)
         {
-            //Hey, at least I display the error!
+            //Show error
             JOptionPane.showMessageDialog(new JFrame(), "Critical Error! " + ex.toString());
         }
     }
@@ -94,34 +103,45 @@ class BoggleGUI implements ActionListener
                 Frame.repaint();
             }
         });
-        //Generates a random string of 16 characters and places the label on the board
-        generateBoggleBoard();
+        
+        //Making blank boggle board
+        initializeBoggleBoard();
 
+        //Adding an action listener to begin
+        
         BeginButton.addActionListener(this);
         //Setting default button to be "Begin' so you can just press enter when the app starts
         Frame.getRootPane().setDefaultButton(BeginButton);
         BeginButton.requestFocus();
 
+        //Making it look pretty
         BoggleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
+        
+        //Adding Boggle stuff
         TimerAndBoggleLabel.add(BoggleLabel);
         TimerAndBoggleLabel.add(LabelTimer);
 
-        EnterWordsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
+        //More pretty stuff
+        EnterWordsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        AutoCompleteLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        
         UserInput.add(EnterWordsLabel);
         UserInput.add(WordInputScroll);
+        UserInput.add(AutoCompleteLabel);
+        UserInput.add(new AutoCompleteTextField());
         UserInput.add(BeginButton);
-
+        
+        //Adding padding to the boggle board container
         BoggleBoardContainer.setBorder(new EmptyBorder(10, 10, 0, 0));
         BoggleBoardContainer.add(BoggleBoard);
         BoggleBoardContainer.add(TimerAndBoggleLabel);
-
+        
         Frame.add(BoggleBoardContainer);
         Frame.add(UserInput);
         Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Frame.getContentPane().setLayout(new GridLayout(2, 1, 5, 5));
         Frame.setSize(400, 400);
+        Frame.setMinimumSize(new Dimension(250, 250));
         Frame.setVisible(true);
     }
 
@@ -129,6 +149,8 @@ class BoggleGUI implements ActionListener
     {
         if (BeginButton.getText().equals("Begin"))
         {
+            boggleBackend = new Boggle();
+            generateBoggleBoard(); //Creates a random string and finds the solutions
             BeginTime = System.currentTimeMillis();
             BeginButton.setText("Done");
             WordInput.setEditable(true);
@@ -139,7 +161,8 @@ class BoggleGUI implements ActionListener
         {
             EndTime = System.currentTimeMillis();
             Timer.stop();
-
+            
+            //Find user solutions
             ArrayList<String> userResults = new ArrayList<String>(Arrays.asList(WordInput.getText().split("\\r?\\n")));
             for (String userResult : userResults)
             {
@@ -151,15 +174,16 @@ class BoggleGUI implements ActionListener
                     }
                 }
             }
-            
-            if(userResults.size() > 0 && userResults.get(0).equals(""))
+
+            if (userResults.size() > 0 && userResults.get(0).equals(""))
             {
-            	InvalidWords = 0;            	
-            }else
-            {
-            	InvalidWords = userResults.size();
+                InvalidWords = 0;
             }
-            
+            else
+            {
+                InvalidWords = userResults.size();
+            }
+
             JOptionPane.showMessageDialog(new JFrame()
                     , "Elapsed Time: " + (EndTime - BeginTime) / 1000 + " seconds \n" +
                     "Words Correct: " + ValidWords + "\n" +
@@ -169,93 +193,190 @@ class BoggleGUI implements ActionListener
             //Reset GUI
             WordInput.setEditable(false);
             BeginButton.setText("Begin");
-            BoggleBoard.removeAll();
+
             WordInput.setText("");
             TimeElapsed = 0;
             ValidWords = 0;
-            Timer.restart();
-            generateBoggleBoard();
+            
+            //Resetting the timer
+            Timer.stop();
+            LabelTimer.setText(Time.format(TimeElapsed * 1000));
+            //Initalizing a blank boggleboard
+            initializeBoggleBoard();
         }
     }
 
     private void generateBoggleBoard()
     {
-        Random random = new Random();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray(); //Grabbing the available characters
-        StringBuilder sb = new StringBuilder();
-        //For each letter configure how it looks and then add it to the boggle board
+        if (boggleBackend == null)
+        {
+            throw new IllegalArgumentException("Boggle backend doesn't exist");
+        }
+        else
+        {
+            //Remove any initial values on the BoggleBoard
+            BoggleBoard.removeAll();
+            //Loop through all the dice and add it to the Board
+            for (char c : boggleBackend.getDice().toCharArray())
+            {
+                final JLabel diceCharacter = new JLabel(String.valueOf(c).toUpperCase());
+                diceCharacter.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                diceCharacter.setHorizontalAlignment(SwingConstants.CENTER);
+                diceCharacter.setFont(new Font("Arial", Font.PLAIN, 24));
+                BoggleBoard.add(diceCharacter);
+            }
+        }
+    }
+
+    private void initializeBoggleBoard()
+    {
+        BoggleBoard.removeAll();
         for (int i = 0; i < 16; i++)
         {
-            char c = chars[random.nextInt(chars.length)];
-            final JLabel diceCharacter = new JLabel(String.valueOf(c).toUpperCase());
+            final JLabel diceCharacter = new JLabel("");
             diceCharacter.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             diceCharacter.setHorizontalAlignment(SwingConstants.CENTER);
             diceCharacter.setFont(new Font("Arial", Font.PLAIN, 24));
-            sb.append(c);
             BoggleBoard.add(diceCharacter);
         }
-        Dice = sb.toString();
-        Dice = Dice.toUpperCase();
-        //Generates the solutions once the boggle board is loaded
-        generateSolutions();
     }
 
-    private void generateSolutions()
-    {
-        for(String word : Dictionary){
-            if (isFound(word))
-            {
-                Solutions.add(word);
-                TotalWords++;
-            }
-        }
-    }
 
-    private boolean isFound(String word)
+    private class Boggle
     {
-        for (int y = 0; y < 4; y++)
+        private String Dice = null;
+        private boolean[] Used = new boolean[16];
+
+        public Boggle()
         {
-            for (int x = 0; x < 4; x++)
+            createRandomBoggleBoard();
+        }
+
+        public String getDice()
+        {
+            return Dice;
+        }
+
+        private boolean isFound(String word)
+        {
+            for (int y = 0; y < 4; y++)
             {
-                if (check(x, y, word.toUpperCase()))
-                    return true;
-                for (int i = 0; i < Used.length; i++) //Reseting the Used values back
+                for (int x = 0; x < 4; x++)
                 {
-                    Used[i] = false;
+                    if (check(x, y, word.toUpperCase()))
+                        return true;
+                    for (int i = 0; i < Used.length; i++) //Reseting the Used values back
+                    {
+                        Used[i] = false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void createRandomBoggleBoard()
+        {
+            Random random = new Random();
+            char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray(); //Grabbing the available characters
+            StringBuilder sb = new StringBuilder();
+            //For each letter configure how it looks and then add it to the boggle board
+            for (int i = 0; i < 16; i++)
+            {
+                char c = chars[random.nextInt(chars.length)];
+
+                sb.append(c);
+            }
+            Dice = sb.toString();
+            Dice = Dice.toUpperCase();
+            //Generates the solutions once the boggle board is loaded
+            generateSolutions();
+        }
+
+        private void generateSolutions()
+        {
+            Solutions.clear();
+            for (String word : Dictionary)
+            {
+                if (isFound(word))
+                {
+                    Solutions.add(word);
+                    TotalWords++;
                 }
             }
         }
-        return false;
-    }
-    private boolean check(int x, int y, String remainder)
-    {
-        if (remainder.length() >= 0)
+
+        private boolean check(int x, int y, String remainder)
         {
-            if (Dice.charAt(4 * y + x) == remainder.charAt(0))
+            if (remainder.length() >= 0)
             {
-                if (remainder.length() > 1)
+                if (Dice.charAt(4 * y + x) == remainder.charAt(0))
                 {
-                    Used[4 * y + x] = true;
-                    for (int dx = x - 1; dx <= x + 1; dx++)
+                    if (remainder.length() > 1)
                     {
-                        for (int dy = y - 1; dy <= y + 1; dy++)
+                        Used[4 * y + x] = true;
+                        for (int dx = x - 1; dx <= x + 1; dx++)
                         {
-                            if (dx >= 0 && dy >= 0 && dx < 4 && dy < 4 && !Used[4 * dy + dx])
+                            for (int dy = y - 1; dy <= y + 1; dy++)
                             {
-                                if (check(dx, dy, remainder.substring(1)))
+                                if (dx >= 0 && dy >= 0 && dx < 4 && dy < 4 && !Used[4 * dy + dx])
                                 {
-                                    return true;
+                                    if (check(dx, dy, remainder.substring(1)))
+                                    {
+                                        return true;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                else
-                {
-                    return true;
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
+    }
+
+    private class AutoCompleteTextField extends JTextArea implements KeyListener
+    {
+
+        public AutoCompleteTextField()
+        {
+            this.addKeyListener(this);
+            Border border = BorderFactory.createLineBorder(Color.GRAY);
+            this.setBorder(border);
+        }
+        @Override
+        public void keyPressed(KeyEvent e)
+        {
+
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e)
+        {
+        	
+        }
+        @Override
+        public void keyReleased(KeyEvent e)
+        {
+        	String dictionaryResult = Dictionary.ceiling(this.getText());
+        	if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE 
+        			|| e.getKeyCode() == KeyEvent.VK_CONTROL 
+        			|| e.getKeyCode() == KeyEvent.VK_LEFT
+        			|| e.getKeyCode() == KeyEvent.VK_RIGHT
+        			|| e.getKeyCode() == KeyEvent.VK_DELETE)
+            {
+            	return;            
+            }
+        	else if(dictionaryResult.contains(this.getText()))
+            {            	
+                int originalLength = this.getText().length();
+                this.setText(dictionaryResult);
+                this.setSelectionStart(originalLength);
+                this.setSelectionEnd(dictionaryResult.length());
+            }
+        }
     }
 }
