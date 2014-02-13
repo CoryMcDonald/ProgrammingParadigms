@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,8 +10,10 @@ import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.io.File;
 import java.util.*;
+
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 class BoggleGUI implements ActionListener
@@ -32,16 +35,16 @@ class BoggleGUI implements ActionListener
     private JLabel LabelTimer = new JLabel("00:00", SwingConstants.CENTER);
     private JLabel BoggleLabel = new JLabel("Boggle");
     private JLabel EnterWordsLabel = new JLabel("Enter Words Here");
-
+    private JLabel AutoCompleteLabel = new JLabel("Autocomplete");
+    
     private SimpleDateFormat Time = new SimpleDateFormat("mm:ss");
 
     private JButton BeginButton = new JButton("Begin");
-    //todo redo
-    private static JTextField WordInput = new JTextField("");
+    private JTextArea WordInput = new JTextArea ("");
 
-//    private JScrollPane WordInputScroll = new JScrollPane(WordInput);
+    private JScrollPane WordInputScroll = new JScrollPane(WordInput);
 
-    private JPanel UserInput = new JPanel(new GridLayout(3, 1));
+    private JPanel UserInput = new JPanel(new GridLayout(3, 2));
     private JPanel BoggleBoard = new JPanel(new GridLayout(4, 4));
     private JPanel BoggleBoardContainer = new JPanel(new GridLayout(1, 2));
     private JPanel TimerAndBoggleLabel = new JPanel(new GridLayout(2, 1));
@@ -52,6 +55,7 @@ class BoggleGUI implements ActionListener
     {
         try
         {
+        	//Reading in file once
             Scanner s = new Scanner(new File("lexicon.txt"));
             while (s.hasNextLine())
             {
@@ -62,12 +66,12 @@ class BoggleGUI implements ActionListener
         }
         catch (FileNotFoundException ex)
         {
+        	//If it couldn't find the file then prompt up the error
             JOptionPane.showMessageDialog(new JFrame(), "Could not find lexicon.txt");
-            System.exit(0); //Probably should specify an exit code but eh
         }
         catch (Exception ex)
         {
-            //Hey, at least I display the error!
+            //Show error
             JOptionPane.showMessageDialog(new JFrame(), "Critical Error! " + ex.toString());
         }
     }
@@ -80,8 +84,7 @@ class BoggleGUI implements ActionListener
     private void createAndShowGUI()
     {
         //Initially disabling user input
-        //todo reenable
-//        WordInput.setEditable(false);
+        WordInput.setEditable(false);
 
         //Boggle Board stuff for representing letters
         LabelTimer.setFont(new Font("Arial", Font.PLAIN, 24));
@@ -100,33 +103,45 @@ class BoggleGUI implements ActionListener
                 Frame.repaint();
             }
         });
+        
+        //Making blank boggle board
         initializeBoggleBoard();
 
+        //Adding an action listener to begin
+        
         BeginButton.addActionListener(this);
         //Setting default button to be "Begin' so you can just press enter when the app starts
         Frame.getRootPane().setDefaultButton(BeginButton);
         BeginButton.requestFocus();
 
+        //Making it look pretty
         BoggleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
+        
+        //Adding Boggle stuff
         TimerAndBoggleLabel.add(BoggleLabel);
         TimerAndBoggleLabel.add(LabelTimer);
 
-        EnterWordsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-
+        //More pretty stuff
+        EnterWordsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        AutoCompleteLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        
         UserInput.add(EnterWordsLabel);
+        UserInput.add(WordInputScroll);
+        UserInput.add(AutoCompleteLabel);
         UserInput.add(new AutoCompleteTextField());
         UserInput.add(BeginButton);
-
+        
+        //Adding padding to the boggle board container
         BoggleBoardContainer.setBorder(new EmptyBorder(10, 10, 0, 0));
         BoggleBoardContainer.add(BoggleBoard);
         BoggleBoardContainer.add(TimerAndBoggleLabel);
-
+        
         Frame.add(BoggleBoardContainer);
         Frame.add(UserInput);
         Frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Frame.getContentPane().setLayout(new GridLayout(2, 1, 5, 5));
         Frame.setSize(400, 400);
+        Frame.setMinimumSize(new Dimension(250, 250));
         Frame.setVisible(true);
     }
 
@@ -135,19 +150,19 @@ class BoggleGUI implements ActionListener
         if (BeginButton.getText().equals("Begin"))
         {
             boggleBackend = new Boggle();
-            generateBoggleBoard();
+            generateBoggleBoard(); //Creates a random string and finds the solutions
             BeginTime = System.currentTimeMillis();
             BeginButton.setText("Done");
-            //todo renable
-//            WordInput.setEditable(true);
-//            WordInput.requestFocus();
+            WordInput.setEditable(true);
+            WordInput.requestFocus();
             Timer.start();
         }
         else
         {
             EndTime = System.currentTimeMillis();
             Timer.stop();
-
+            
+            //Find user solutions
             ArrayList<String> userResults = new ArrayList<String>(Arrays.asList(WordInput.getText().split("\\r?\\n")));
             for (String userResult : userResults)
             {
@@ -182,7 +197,11 @@ class BoggleGUI implements ActionListener
             WordInput.setText("");
             TimeElapsed = 0;
             ValidWords = 0;
-            Timer.restart();
+            
+            //Resetting the timer
+            Timer.stop();
+            LabelTimer.setText(Time.format(TimeElapsed * 1000));
+            //Initalizing a blank boggleboard
             initializeBoggleBoard();
         }
     }
@@ -233,7 +252,6 @@ class BoggleGUI implements ActionListener
             createRandomBoggleBoard();
         }
 
-        //Yay encapsulation!
         public String getDice()
         {
             return Dice;
@@ -322,9 +340,12 @@ class BoggleGUI implements ActionListener
 
     private class AutoCompleteTextField extends JTextArea implements KeyListener
     {
+
         public AutoCompleteTextField()
         {
             this.addKeyListener(this);
+            Border border = BorderFactory.createLineBorder(Color.GRAY);
+            this.setBorder(border);
         }
         @Override
         public void keyPressed(KeyEvent e)
@@ -335,11 +356,9 @@ class BoggleGUI implements ActionListener
         @Override
         public void keyTyped(KeyEvent e)
         {
+        	
         }
-        String dictionaryResult;
         @Override
-        public void keyReleased(KeyEvent e)
-        {
         public void keyReleased(KeyEvent e)
         {
         	String dictionaryResult = Dictionary.ceiling(this.getText());
@@ -358,7 +377,6 @@ class BoggleGUI implements ActionListener
                 this.setSelectionStart(originalLength);
                 this.setSelectionEnd(dictionaryResult.length());
             }
-        }
         }
     }
 }
