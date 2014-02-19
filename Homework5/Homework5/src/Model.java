@@ -8,6 +8,7 @@ class Model
 
     ArrayList<Sprite> ListOfSprites = new ArrayList<Sprite>();
     Random rand = new Random();
+    boolean canJump = true;
 
 	Model() throws IOException
     {
@@ -25,6 +26,12 @@ class Model
         for(Sprite currentSprite : ListOfSprites)
         {
             currentSprite.setDestination(x, y);
+        }
+    }
+    public void setJump(boolean jumpCharacter) {
+        for(Sprite currentSprite : ListOfSprites)
+        {
+            currentSprite.setJump(jumpCharacter);
         }
     }
 }
