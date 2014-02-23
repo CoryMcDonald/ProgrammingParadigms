@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
@@ -11,7 +12,8 @@ class Controller implements MouseListener
 
 	public void mousePressed(MouseEvent e) {
 		model.setDestination(e.getX(), e.getY());
-        model.setJump(true);
+        if(SwingUtilities.isRightMouseButton(e))
+            model.setJump(true);
         //if mouse is pressed is right click
             //jump
 	}

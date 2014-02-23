@@ -6,13 +6,14 @@ import java.util.Random;
 class Model
 {
 
-    ArrayList<Sprite> ListOfSprites = new ArrayList<Sprite>();
+    static ArrayList<Sprite> ListOfSprites = new ArrayList<Sprite>();
     Random rand = new Random();
     boolean canJump = true;
 
 	Model() throws IOException
     {
         ListOfSprites.add(new Turtle(rand.nextInt(500),rand.nextInt(500)));
+        ListOfSprites.add(new Razorback(0,0));
     }
 
     public void update(Graphics g) {

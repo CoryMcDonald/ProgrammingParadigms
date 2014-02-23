@@ -8,6 +8,7 @@ public abstract class Sprite
     int y;
     int dest_x;
     int dest_y;
+    int floor = 500;
     int imageHeight = 100;
     Image sprite_image;
     double velocity = .5;
@@ -19,7 +20,6 @@ public abstract class Sprite
 
     Sprite() throws IOException
     {
-       // this.sprite_image = ImageIO.read(getClass().getResourceAsStream("turtle.png"));
 
     }
 
@@ -37,38 +37,16 @@ public abstract class Sprite
             initialPosition = false;
         }
 
-        if(jumpCharacter)
-        {
-           // velocity -= 2 *  (time-System.currentTimeMillis())/100;
-            velocity = 10;
-            jumpCharacter = false;
-        }else if(this.y >= 500)
-        {
-            //on ground set no falling
-            velocity = 0;
-            this.y = 500;
-            //set friction
-//            characterSpeed *= .9;
-        }
         if(velocity != 0)
         {
             velocity -= .9 ;// * (time-System.currentTimeMillis())/100;
         }
-        //detecting collision
 
+        //All sprites will have gravity effect them
         this.y -= velocity;
 
-        if(characterSpeed > (dest_x - this.x ))
-        {
-            if(this.x < this.dest_x )
-                this.x += characterSpeed;
-            else if(this.x > this.dest_x)
-                this.x -= characterSpeed;
-        }else
-        {
-            this.x += characterSpeed;
-        }
-        // Draw the turtle
+
+        // Draw the sprite
         g.drawImage(this.sprite_image, this.x, this.y, null);
 
 
