@@ -1,4 +1,5 @@
 import javax.swing.JFrame;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.Timer;
@@ -14,7 +15,8 @@ public class Game extends JFrame implements ActionListener {
 		this.setTitle("Turtle Attack");
 		this.setSize(1000, 700);
 		this.getContentPane().add(new View(this.controller, this.model));
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setBackground(Color.decode("#5e91fe"));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		new Timer(50, this).start();
 	}

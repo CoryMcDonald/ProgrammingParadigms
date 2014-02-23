@@ -8,7 +8,7 @@ public abstract class Sprite
     int y;
     int dest_x;
     int dest_y;
-    int floor = 500;
+    int floor = 0; //Setting default floor
     int imageHeight = 100;
     Image sprite_image;
     double velocity = .5;
@@ -20,15 +20,13 @@ public abstract class Sprite
 
     Sprite() throws IOException
     {
-
     }
 
-    abstract void update();
+    abstract boolean update();
 
-    public void update(Graphics g) {
-        time = System.currentTimeMillis() / 100;
-
-        this.update();
+    public boolean update(Graphics g) {
+        boolean removeSprite = false;
+        removeSprite = this.update();
 
         //Check if need to set initial position
         if(initialPosition == true)
@@ -49,7 +47,7 @@ public abstract class Sprite
         // Draw the sprite
         g.drawImage(this.sprite_image, this.x, this.y, null);
 
-
+        return removeSprite;
         }
 
     public void setDestination(int x, int y) {
@@ -60,6 +58,7 @@ public abstract class Sprite
     {
         this.sprite_image = i;
         imageHeight = new ImageIcon(sprite_image).getIconHeight(); //neat hack :)
+        floor = 600 - imageHeight;
     }
     public void setJump(boolean tJump)
     {

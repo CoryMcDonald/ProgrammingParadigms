@@ -65,48 +65,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Model.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Model.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Homework5/src/Model.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="19" selection-start="383" selection-end="383" vertical-scroll-proportion="0.0" vertical-offset="349" max-vertical-offset="697">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Turtle.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Homework5/src/Turtle.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="78" selection-start="632" selection-end="632" vertical-scroll-proportion="1.0747126" vertical-offset="0" max-vertical-offset="1615">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Controller.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Homework5/src/Controller.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="28" selection-start="394" selection-end="394" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Game.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Homework5/src/Game.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="0" selection-start="302" selection-end="302" vertical-scroll-proportion="0.0" vertical-offset="3" max-vertical-offset="527">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Razorback.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Homework5/src/Razorback.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="9" selection-start="1118" selection-end="1118" vertical-scroll-proportion="0.0" vertical-offset="476" max-vertical-offset="1275">
+            <state line="52" column="70" selection-start="1463" selection-end="1463" vertical-scroll-proportion="0.76975167" vertical-offset="475" max-vertical-offset="1054">
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#208#216#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -115,10 +79,56 @@
       <file leaf-file-name="Sprite.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Homework5/src/Sprite.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="20" selection-start="175" selection-end="175" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1207">
+            <state line="32" column="9" selection-start="683" selection-end="683" vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="1207">
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#1475#1476#0" expanded="true" />
+                <element signature="e#1517#1518#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Turtle.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Homework5/src/Turtle.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="13" selection-start="167" selection-end="167" vertical-scroll-proportion="0.0" vertical-offset="16" max-vertical-offset="1683">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Controller.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Homework5/src/Controller.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="5" selection-start="432" selection-end="432" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="View.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Homework5/src/View.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="17" selection-start="683" selection-end="683" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Game.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Homework5/src/Game.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="32" selection-start="463" selection-end="463" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Razorback.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Homework5/src/Razorback.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="92" column="64" selection-start="2577" selection-end="2577" vertical-scroll-proportion="0.0" vertical-offset="1428" max-vertical-offset="2975">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -133,13 +143,13 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/Homework5/src/Controller.java" />
         <option value="$PROJECT_DIR$/Homework5/src/View.java" />
         <option value="$PROJECT_DIR$/Homework5/src/Game.java" />
-        <option value="$PROJECT_DIR$/Homework5/src/Model.java" />
-        <option value="$PROJECT_DIR$/Homework5/src/Controller.java" />
         <option value="$PROJECT_DIR$/Homework5/src/Sprite.java" />
         <option value="$PROJECT_DIR$/Homework5/src/Razorback.java" />
         <option value="$PROJECT_DIR$/Homework5/src/Turtle.java" />
+        <option value="$PROJECT_DIR$/Homework5/src/Model.java" />
       </list>
     </option>
   </component>
@@ -176,7 +186,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -211,6 +220,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -231,6 +241,7 @@
     <property name="restartRequiresConfirmation" value="true" />
     <property name="dynamic.classpath" value="false" />
     <property name="FullScreen" value="false" />
+    <property name="SearchEverywhereHistory" value="" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -276,6 +287,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -301,19 +325,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -451,12 +462,12 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39186993" sideWeight="0.4886707" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23739837" sideWeight="0.4886707" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284553" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -475,13 +486,13 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284553" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39186993" sideWeight="0.4886707" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -507,8 +518,57 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Homework5/src/Model.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="47" selection-start="842" selection-end="842" vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="731">
+        <state line="22" column="9" selection-start="561" selection-end="561" vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="697">
+          <folding>
+            <element signature="e#208#216#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Turtle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="0" selection-start="131" selection-end="131" vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="1649">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="31" selection-start="226" selection-end="226" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="544">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="302" selection-end="302" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="595">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Razorback.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="9" selection-start="1118" selection-end="1118" vertical-scroll-proportion="0.0" vertical-offset="476" max-vertical-offset="1275">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Sprite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="20" selection-start="175" selection-end="175" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="1258">
+          <folding>
+            <element signature="e#1475#1476#0" expanded="true" />
+            <element signature="e#1517#1518#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Model.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="47" selection-start="842" selection-end="842" vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="731">
+          <folding>
+            <element signature="e#208#216#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -537,7 +597,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="0" selection-start="1388" selection-end="1388" vertical-scroll-proportion="0.0" vertical-offset="1003" max-vertical-offset="1513">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1475#1476#0" expanded="true" />
+            <element signature="e#1517#1518#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -545,7 +606,9 @@
     <entry file="file://$PROJECT_DIR$/Homework5/src/Model.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="33" column="47" selection-start="842" selection-end="842" vertical-scroll-proportion="0.0" vertical-offset="346" max-vertical-offset="731">
-          <folding />
+          <folding>
+            <element signature="e#208#216#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -560,7 +623,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="24" selection-start="1007" selection-end="1007" vertical-scroll-proportion="0.0" vertical-offset="680" max-vertical-offset="1394">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1475#1476#0" expanded="true" />
+            <element signature="e#1517#1518#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -582,7 +646,9 @@
     <entry file="file://$PROJECT_DIR$/Homework5/src/Model.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="33" column="47" selection-start="842" selection-end="842" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="731">
-          <folding />
+          <folding>
+            <element signature="e#208#216#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -597,7 +663,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="41" column="30" selection-start="1079" selection-end="1079" vertical-scroll-proportion="0.0" vertical-offset="536" max-vertical-offset="1496">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1475#1476#0" expanded="true" />
+            <element signature="e#1517#1518#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -621,11 +688,6 @@
         <state line="3" column="0" selection-start="72" selection-end="72" vertical-scroll-proportion="0.09010601" vertical-offset="0" max-vertical-offset="566" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Homework5/turtle.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files (x86)/Java/jdk1.7.0_02/src.zip!/javax/imageio/ImageIO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1300" column="0" selection-start="45883" selection-end="45883" vertical-scroll-proportion="1.9147286" vertical-offset="20305" max-vertical-offset="26571" />
@@ -638,59 +700,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Homework5/src/View.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="224" selection-end="310" vertical-scroll-proportion="0.5862069" vertical-offset="0" max-vertical-offset="408" />
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files (x86)/Java/jdk1.7.0_02/src.zip!/java/lang/System.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="347" column="50" selection-start="12192" selection-end="12192" vertical-scroll-proportion="0.33333334" vertical-offset="5120" max-vertical-offset="19941" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/inAirRazorbackLeft.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Homework5/src/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="302" selection-end="302" vertical-scroll-proportion="0.0" vertical-offset="3" max-vertical-offset="527">
+        <state line="15" column="32" selection-start="463" selection-end="463" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Homework5/src/Controller.java">
+    <entry file="jar://C:/Program Files (x86)/Java/jdk1.7.0_02/src.zip!/java/util/ArrayList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="28" selection-start="394" selection-end="394" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
+        <state line="772" column="23" selection-start="28584" selection-end="28584" vertical-scroll-proportion="0.33182845" vertical-offset="12586" max-vertical-offset="18955">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Homework5/src/Model.java">
+    <entry file="file://$PROJECT_DIR$/Homework5/src/View.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="19" selection-start="383" selection-end="383" vertical-scroll-proportion="0.0" vertical-offset="349" max-vertical-offset="697">
+        <state line="24" column="17" selection-start="683" selection-end="683" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Razorback.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="92" column="64" selection-start="2577" selection-end="2577" vertical-scroll-proportion="0.0" vertical-offset="1428" max-vertical-offset="2975">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Homework5/src/Sprite.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="20" selection-start="175" selection-end="175" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1207">
+        <state line="32" column="9" selection-start="683" selection-end="683" vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="1207">
           <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Homework5/src/Razorback.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="9" selection-start="1118" selection-end="1118" vertical-scroll-proportion="0.0" vertical-offset="476" max-vertical-offset="1275">
-          <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1475#1476#0" expanded="true" />
+            <element signature="e#1517#1518#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Homework5/src/Turtle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="78" selection-start="632" selection-end="632" vertical-scroll-proportion="1.0747126" vertical-offset="0" max-vertical-offset="1615">
+        <state line="8" column="13" selection-start="167" selection-end="167" vertical-scroll-proportion="0.0" vertical-offset="16" max-vertical-offset="1683">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="5" selection-start="432" selection-end="432" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Homework5/src/Model.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="52" column="70" selection-start="1463" selection-end="1463" vertical-scroll-proportion="0.76975167" vertical-offset="475" max-vertical-offset="1054">
+          <folding>
+            <element signature="e#208#216#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

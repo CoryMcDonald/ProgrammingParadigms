@@ -28,13 +28,14 @@ class Turtle extends Sprite
     }
 
     @Override
-    void update()
+    boolean update()
     {
-        if(this.y >= 500)
+        boolean removeSprite = false;
+        if(this.y >= floor)
         {
             //on ground set no falling
             velocity = 0;
-            this.y = 500;
+            this.y = floor;
             //set friction
 //            characterSpeed *= .9;
         }
@@ -44,12 +45,15 @@ class Turtle extends Sprite
         {
             this.x -= characterSpeed;
             walk(); //Changes sprite while walking - totally unneccessary
+        }else if (this.x < 5)
+        {
+            removeSprite = true; //Remove the sprite
         }
         else
         {
             setSpriteImage(turtleImage);
-            //xModel.ListOfSprites.remove(this);
         }
+        return removeSprite;
     }
     private void walk()
     {
