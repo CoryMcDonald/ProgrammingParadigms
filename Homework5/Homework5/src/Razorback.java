@@ -47,6 +47,8 @@ public class Razorback extends Sprite
 
         }else if(this.y >= floor) //This checks to see if there needs to be a collision with the floor
         {
+            //So it doesn't queue up a jump
+            jumpCharacter = false;
             velocity = 0;
             this.y = floor;
         }
