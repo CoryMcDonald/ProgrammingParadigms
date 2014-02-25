@@ -9,6 +9,7 @@ class Model
 
     static ArrayList<Sprite> ListOfSprites = new ArrayList<Sprite>();
     int numOfFrames = 0;
+    int turtleDeaths = 0;
     Random rand = new Random();
     Razorback r = new Razorback(0,0); //Add a razorback at position 0,0
 
@@ -27,31 +28,25 @@ class Model
             if(!(currentSprite instanceof Razorback)) //Detect collision for every sprite EXCEPT the Razorback
             {
 //                if(r.x + r.imageWidth > currentSprite.x
-//                        && r.x < currentSprite.x + currentSprite.imageWidth
-//                        && r.y + r.imageHeight > currentSprite.x
-//                        && r.y < currentSprite.y + currentSprite.imageHeight)
-//                {
-//                    currentSprite.die();
-//                }
-                if(r.x + r.imageWidth > currentSprite.x
-                        && r.x < currentSprite.x + currentSprite.imageWidth
-                        && r.y + r.imageHeight > currentSprite.x
+                		&& r.x < currentSprite.x + currentSprite.imageWidth
+                        && r.y + r.imageHeight > currentSprite.y                       
                         && r.y < currentSprite.y + currentSprite.imageHeight
-                        && r.y + 10< currentSprite.y)
+                        && r.y + 10 < currentSprite.y)
                 {
-                    if(!currentSprite.death)
+                     if(!currentSprite.death)
+                     {
                         r.bounce();
-                    currentSprite.die();
+                        currentSprite.die();
+                        turtleDeaths++;
+                     }
                 }
                 else  if(r.x + r.imageWidth > currentSprite.x
                         && r.x < currentSprite.x + currentSprite.imageWidth
-                        && r.y + r.imageHeight > currentSprite.x
+                        && r.y + r.imageHeight > currentSprite.y
                         && r.y < currentSprite.y + currentSprite.imageHeight && !currentSprite.death)
                 {
                     r.die();
                 }
-//                System.out.println(r.x);
-
             }
 
             if(currentSprite.update(g) == true )
