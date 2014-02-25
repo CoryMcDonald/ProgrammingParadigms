@@ -10,7 +10,10 @@ public abstract class Sprite
     int dest_y;
     int floor = 0; //Setting default floor
     int imageHeight = 100;
+    int imageWidth = 100;
+    int deathFrame = 0;
     Image sprite_image;
+    boolean death = false;
     double velocity = .5;
     double characterSpeed = 3;
     double time;
@@ -37,7 +40,7 @@ public abstract class Sprite
 
         if(velocity != 0)
         {
-            velocity -= .9 ;// * (time-System.currentTimeMillis())/100;
+            velocity -= .9 ;
         }
 
         //All sprites will have gravity effect them
@@ -54,11 +57,17 @@ public abstract class Sprite
         this.dest_x = x;
         this.dest_y = y;
     }
+
+    //Function is used to handle what happens if there's a collision
+    abstract void die();
+
     public void setSpriteImage(Image i)
     {
         this.sprite_image = i;
-        imageHeight = new ImageIcon(sprite_image).getIconHeight(); //neat hack :)
-        floor = 600 - imageHeight;
+        ImageIcon myImage = new ImageIcon(sprite_image);
+        imageHeight = myImage.getIconHeight();  //neat hack :)
+        imageWidth = myImage.getIconWidth();  //neat hack :)
+        floor = 601 - imageHeight;
     }
     public void setJump(boolean tJump)
     {

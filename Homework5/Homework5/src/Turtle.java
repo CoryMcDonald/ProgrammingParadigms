@@ -1,3 +1,5 @@
+import com.sun.swing.internal.plaf.synth.resources.synth_sv;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
@@ -5,6 +7,7 @@ import java.io.IOException;
 class Turtle extends Sprite
 {
     Image turtleImage;
+    Image turtleDeath;
     Image turtleWalk1;
     Image turtleWalk2;
     Image turtleWalk3;
@@ -34,14 +37,29 @@ class Turtle extends Sprite
         if(this.y >= floor)
         {
             //on ground set no falling
+            this.y = this.floor;
             velocity = 0;
-            this.y = floor;
             //set friction
 //            characterSpeed *= .9;
         }
 
         //Handling moving to left
-        if(velocity == 0 && this.x > 0)
+        if(death)
+        {
+            if(turtleDeath == null)
+            {
+                try{
+                    turtleDeath = ImageIO.read(getClass().getResourceAsStream("turtlesmashed.png"));
+                    setSpriteImage(turtleDeath);
+                    this.y = floor;
+                }catch (Exception ex)
+                {
+                    System.out.println(ex.toString());
+                }
+            }
+            deathFrame++;
+            removeSprite = true;
+        }else if(velocity == 0 && this.x > 0)
         {
             this.x -= characterSpeed;
             walk(); //Changes sprite while walking - totally unneccessary
@@ -92,5 +110,11 @@ class Turtle extends Sprite
         {
             System.out.println("Error updating turtle walk" + ex.toString());
         }
+    }
+
+    @Override
+    void die()
+    {
+        death = true;
     }
 }

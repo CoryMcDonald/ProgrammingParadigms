@@ -10,29 +10,65 @@ class Model
     static ArrayList<Sprite> ListOfSprites = new ArrayList<Sprite>();
     int numOfFrames = 0;
     Random rand = new Random();
+    Razorback r = new Razorback(0,0); //Add a razorback at position 0,0
 
 	Model() throws IOException
     {
-        Razorback r = new Razorback(0,0); //Add a razorback at position 0,0
-        ListOfSprites.add(new Turtle(rand.nextInt(1000),0)); //Add an anonymous turtle at any x position but at y=0
+        ListOfSprites.add(new Turtle(rand.nextInt(500)+100,0)); //Add an anonymous turtle at any x position but at y=0
         ListOfSprites.add(r); //Go ahead and add the razorback we created
     }
 
     public void update(Graphics g) {
         numOfFrames++;
         Iterator<Sprite> i = ListOfSprites.iterator();
-
         while (i.hasNext())
         {
             Sprite currentSprite = i.next();
-            if(currentSprite.update(g) == true)
+            if(!(currentSprite instanceof Razorback)) //Detect collision for every sprite EXCEPT the Razorback
             {
-                i.remove();
+//                if(r.x + r.imageWidth > currentSprite.x
+//                        && r.x < currentSprite.x + currentSprite.imageWidth
+//                        && r.y + r.imageHeight > currentSprite.x
+//                        && r.y < currentSprite.y + currentSprite.imageHeight)
+//                {
+//                    currentSprite.die();
+//                }
+                if(r.x + r.imageWidth > currentSprite.x
+                        && r.x < currentSprite.x + currentSprite.imageWidth
+                        && r.y + r.imageHeight > currentSprite.x
+                        && r.y < currentSprite.y + currentSprite.imageHeight
+                        && r.y + 10< currentSprite.y)
+                {
+                    if(!currentSprite.death)
+                        r.bounce();
+                    currentSprite.die();
+                }
+                else  if(r.x + r.imageWidth > currentSprite.x
+                        && r.x < currentSprite.x + currentSprite.imageWidth
+                        && r.y + r.imageHeight > currentSprite.x
+                        && r.y < currentSprite.y + currentSprite.imageHeight && !currentSprite.death)
+                {
+                    r.die();
+                }
+//                System.out.println(r.x);
+
+            }
+
+            if(currentSprite.update(g) == true )
+            {
+                if(currentSprite.death && currentSprite.deathFrame == 60)
+                {
+                    i.remove();
+                }else if(!currentSprite.death)
+                {
+                    i.remove();
+                }
             }
         }
         if(numOfFrames == 60)
         {
-            try{
+            try
+            {
                 ListOfSprites.add(new Turtle(rand.nextInt(1000), 0));
             }
             catch(Exception ex)

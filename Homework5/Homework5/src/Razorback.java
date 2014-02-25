@@ -168,4 +168,19 @@ public class Razorback extends Sprite
             System.out.println("Error loading left jump sprite - " +ex.toString()); //Log exception getting sprite
         }
     }
+
+    void bounce()
+    {
+        velocity = 10;
+    }
+    @Override
+    void die()
+    {
+        this.x = 0;
+        death = true;
+        setSpriteImage(razorbackImage);
+        this.y = floor;
+        this.dest_x = 0;
+        this.dest_y = floor;
+    }
 }
