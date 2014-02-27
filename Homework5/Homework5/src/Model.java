@@ -12,10 +12,11 @@ class Model
     int turtleDeaths = 0;
     Random rand = new Random();
     Razorback r = new Razorback(0,0); //Add a razorback at position 0,0
-
+    
 	Model() throws IOException
     {
-        ListOfSprites.add(new Turtle(rand.nextInt(500)+100,0)); //Add an anonymous turtle at any x position but at y=0
+        ListOfSprites.add(new Turtle(rand.nextInt(1000)+100,0)); //Add an anonymous turtle at any x position but at y=0
+        ListOfSprites.add(new BoggleSprite()); 
         ListOfSprites.add(r); //Go ahead and add the razorback we created
     }
 
@@ -27,11 +28,11 @@ class Model
             Sprite currentSprite = i.next();
             if(!(currentSprite instanceof Razorback)) //Detect collision for every sprite EXCEPT the Razorback
             {
-//                if(r.x + r.imageWidth > currentSprite.x
+                if(r.x + r.imageWidth > currentSprite.x
                 		&& r.x < currentSprite.x + currentSprite.imageWidth
                         && r.y + r.imageHeight > currentSprite.y                       
                         && r.y < currentSprite.y + currentSprite.imageHeight
-                        && r.y + 10 < currentSprite.y)
+                        && r.y + 10 < currentSprite.y && currentSprite instanceof Turtle)
                 {
                      if(!currentSprite.death)
                      {
@@ -40,12 +41,22 @@ class Model
                         turtleDeaths++;
                      }
                 }
+                else if(r.x + r.imageWidth > currentSprite.x
+                		&& r.x < currentSprite.x + currentSprite.imageWidth
+                        && r.y + r.imageHeight > currentSprite.y                       
+                        && r.y < currentSprite.y + currentSprite.imageHeight
+                        && currentSprite instanceof BoggleSprite && !currentSprite.death)
+                {      
+                	currentSprite.die();   
+                	new BoggleGUI();                	     	
+                }
                 else  if(r.x + r.imageWidth > currentSprite.x
                         && r.x < currentSprite.x + currentSprite.imageWidth
                         && r.y + r.imageHeight > currentSprite.y
                         && r.y < currentSprite.y + currentSprite.imageHeight && !currentSprite.death)
                 {
                     r.die();
+                    turtleDeaths = 0;
                 }
             }
 
@@ -64,7 +75,7 @@ class Model
         {
             try
             {
-                ListOfSprites.add(new Turtle(rand.nextInt(1000), 0));
+                //ListOfSprites.add(new Turtle(rand.nextInt(1000)+100, 0));
             }
             catch(Exception ex)
             {
