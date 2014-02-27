@@ -75,7 +75,7 @@ class Model
         {
             try
             {
-                //ListOfSprites.add(new Turtle(rand.nextInt(1000)+100, 0));
+                ListOfSprites.add(new Turtle(rand.nextInt(1000)+100, 0));
             }
             catch(Exception ex)
             {
