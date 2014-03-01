@@ -58,7 +58,7 @@ class BoggleGUI implements ActionListener
     		try
             {
              //Reading in file once
-                Scanner s = new Scanner(new File("lexicon.txt"));
+                Scanner s = new Scanner(new File("resources/lexicon.txt"));
                 while (s.hasNextLine())
                 {
                     Dictionary.add(s.nextLine());

@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -7,32 +8,33 @@ import java.io.IOException;
  */
 public class Razorback extends Sprite
 {
-    Image razorbackImage;
-    Image flippedRazorbackImage;
-    Image inAirRazorbackImage;
-    Image inAirRazorbackImageLeft;
     int currentWalk = 0;
-    Image razorbackWalkLeft1;
-    Image razorbackWalkLeft2;
-    Image razorbackWalkLeft3;
-    Image razorbackWalkRight1;
-    Image razorbackWalkRight2;
-    Image razorbackWalkRight3;
+    static Image razorbackImage;
+    static Image flippedRazorbackImage;
+    static Image inAirRazorbackImage;
+    static Image inAirRazorbackImageLeft;
+    static Image razorbackWalkLeft1;
+    static Image razorbackWalkLeft2;
+    static Image razorbackWalkLeft3;
+    static Image razorbackWalkRight1;
+    static Image razorbackWalkRight2;
+    static Image razorbackWalkRight3;
     Razorback(int initX, int initY) throws IOException
     {
         this.x = initX;
         this.y = initY;
         this.dest_x = initX;
         this.dest_y = initY;
+        //Default character speed
         characterSpeed = 7.5;
         if(razorbackImage == null)
         {
-            razorbackImage = ImageIO.read(getClass().getResourceAsStream("razorback.png"));
+            razorbackImage = ImageIO.read(new File("resources/razorback.png"));
             setSpriteImage(razorbackImage);
         }
         if(flippedRazorbackImage == null)
         {
-            flippedRazorbackImage = ImageIO.read(getClass().getResourceAsStream("razorbackLeft.png"));
+            flippedRazorbackImage = ImageIO.read(new File("resources/razorbackLeft.png"));
         }
     }
     
@@ -99,11 +101,11 @@ public class Razorback extends Sprite
     {
         try{
             if(razorbackWalkLeft1 == null)
-                razorbackWalkLeft1 = ImageIO.read(getClass().getResourceAsStream("razorbackwalkleft1.png"));
+                razorbackWalkLeft1 = ImageIO.read(new File("resources/razorbackwalkleft1.png"));
             if(razorbackWalkLeft2 == null)
-                razorbackWalkLeft2 = ImageIO.read(getClass().getResourceAsStream("razorbackwalkleft2.png"));
+                razorbackWalkLeft2 = ImageIO.read(new File("resources/razorbackwalkleft2.png"));
             if(razorbackWalkLeft3 == null)
-                razorbackWalkLeft3 = ImageIO.read(getClass().getResourceAsStream("razorbackwalkleft3.png"));
+                razorbackWalkLeft3 = ImageIO.read(new File("resources/razorbackwalkleft3.png"));
 
             if(currentWalk == 1)
                 setSpriteImage(razorbackWalkLeft1);
@@ -123,11 +125,11 @@ public class Razorback extends Sprite
     {
         try{
             if(razorbackWalkRight1 == null)
-                razorbackWalkRight1 = ImageIO.read(getClass().getResourceAsStream("razorbackwalkright1.png"));
+                razorbackWalkRight1 = ImageIO.read(new File("resources/razorbackwalkright1.png"));
             if(razorbackWalkRight2 == null)
-                razorbackWalkRight2 = ImageIO.read(getClass().getResourceAsStream("razorbackwalkright2.png"));
+                razorbackWalkRight2 = ImageIO.read(new File("resources/razorbackwalkright2.png"));
             if(razorbackWalkRight3 == null)
-                razorbackWalkRight3 = ImageIO.read(getClass().getResourceAsStream("razorbackwalkright3.png"));
+                razorbackWalkRight3 = ImageIO.read(new File("resources/razorbackwalkright3.png"));
 
             if(currentWalk == 1)
                 setSpriteImage(razorbackWalkRight1);
@@ -148,7 +150,7 @@ public class Razorback extends Sprite
         try
         {
             if(inAirRazorbackImage == null)
-                inAirRazorbackImage = ImageIO.read(getClass().getResourceAsStream("inAirRazorback.png"));
+                inAirRazorbackImage = ImageIO.read(new File("resources/inAirRazorback.png"));
             setSpriteImage(inAirRazorbackImage);
         }
         catch (Exception ex)
@@ -162,7 +164,7 @@ public class Razorback extends Sprite
 
         {
             if(inAirRazorbackImageLeft == null)
-                inAirRazorbackImageLeft = ImageIO.read(getClass().getResourceAsStream("inAirRazorbackLeft.png"));
+                inAirRazorbackImageLeft = ImageIO.read(new File("resources/inAirRazorbackLeft.png"));
             setSpriteImage(inAirRazorbackImageLeft);
         }
         catch (Exception ex)

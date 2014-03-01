@@ -1,11 +1,12 @@
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.io.File;
 
 class View extends JPanel {
 	Controller controller;
 	Model model;
-    Image backgroundImage;
+    static Image backgroundImage;
 	View(Controller c, Model m) {
 		this.controller = c;
 		this.model = m;
@@ -16,7 +17,7 @@ class View extends JPanel {
 	public void paintComponent(Graphics g) {
         try{
             if(backgroundImage == null)
-                backgroundImage = ImageIO.read(getClass().getResourceAsStream("background.png"));
+                backgroundImage = ImageIO.read(new File("resources/background.png"));
             g.drawImage(backgroundImage,0,275, null);
         }catch
                 (Exception ex)

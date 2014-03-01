@@ -12,10 +12,9 @@ class Controller implements MouseListener
 
 	public void mousePressed(MouseEvent e) {
 		model.setDestination(e.getX(), e.getY());
+        //Allow model to be able to jump
         if(SwingUtilities.isRightMouseButton(e))
             model.setJump(true);
-        //if mouse is pressed is right click
-            //jump
 	}
 
 	public void mouseReleased(MouseEvent e) {    }

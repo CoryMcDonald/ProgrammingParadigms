@@ -11,12 +11,12 @@ class Model
     int numOfFrames = 0;
     int turtleDeaths = 0;
     Random rand = new Random();
-    Razorback r = new Razorback(0,0); //Add a razorback at position 0,0
-    
+    Razorback r = new Razorback(0,0); //Add a razorback at position 0,0 (put this as a static for update function
+
 	Model() throws IOException
     {
-        ListOfSprites.add(new Turtle(rand.nextInt(1000)+100,0)); //Add an anonymous turtle at any x position but at y=0
-        ListOfSprites.add(new BoggleSprite()); 
+        ListOfSprites.add(new Turtle(rand.nextInt(900)+100,0)); //Add an anonymous turtle at any x position but at y=0
+        ListOfSprites.add(new BoggleSprite()); //Adds the boggle sprite
         ListOfSprites.add(r); //Go ahead and add the razorback we created
     }
 
@@ -28,54 +28,52 @@ class Model
             Sprite currentSprite = i.next();
             if(!(currentSprite instanceof Razorback)) //Detect collision for every sprite EXCEPT the Razorback
             {
+                //Hey look! A collision
                 if(r.x + r.imageWidth > currentSprite.x
                 		&& r.x < currentSprite.x + currentSprite.imageWidth
                         && r.y + r.imageHeight > currentSprite.y                       
-                        && r.y < currentSprite.y + currentSprite.imageHeight
-                        && r.y + 10 < currentSprite.y && currentSprite instanceof Turtle)
+                        && r.y < currentSprite.y + currentSprite.imageHeight && !currentSprite.death)
                 {
-                     if(!currentSprite.death)
+                    //Was this collision with a turtle? If so then do stuff with player
+                     if(r.y + 10 < currentSprite.y && currentSprite instanceof Turtle)
                      {
                         r.bounce();
                         currentSprite.die();
                         turtleDeaths++;
                      }
+                     //It collided with the boggle board!
+                     else if(currentSprite instanceof BoggleSprite)
+                     {
+                         currentSprite.die();
+                         new BoggleGUI();
+                     }
+                     else
+                     {
+                         r.die();
+                         turtleDeaths = 0;
+                     }
                 }
-                else if(r.x + r.imageWidth > currentSprite.x
-                		&& r.x < currentSprite.x + currentSprite.imageWidth
-                        && r.y + r.imageHeight > currentSprite.y                       
-                        && r.y < currentSprite.y + currentSprite.imageHeight
-                        && currentSprite instanceof BoggleSprite && !currentSprite.death)
-                {      
-                	currentSprite.die();   
-                	new BoggleGUI();                	     	
-                }
-                else  if(r.x + r.imageWidth > currentSprite.x
-                        && r.x < currentSprite.x + currentSprite.imageWidth
-                        && r.y + r.imageHeight > currentSprite.y
-                        && r.y < currentSprite.y + currentSprite.imageHeight && !currentSprite.death)
-                {
-                    r.die();
-                    turtleDeaths = 0;
-                }
+
+
             }
 
             if(currentSprite.update(g) == true )
             {
+                //Removes dead turtles
                 if(currentSprite.death && currentSprite.deathFrame == 60)
                 {
                     i.remove();
-                }else if(!currentSprite.death)
+                }else if(!currentSprite.death) //Removes turtles from left, they won't be dead
                 {
                     i.remove();
                 }
             }
         }
-        if(numOfFrames == 60)
+        if(numOfFrames == 60) //Every 3 seconds add a new turtle
         {
             try
             {
-                ListOfSprites.add(new Turtle(rand.nextInt(1000)+100, 0));
+                ListOfSprites.add(new Turtle(rand.nextInt(900)+100, 0));
             }
             catch(Exception ex)
             {

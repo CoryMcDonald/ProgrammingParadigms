@@ -1,4 +1,5 @@
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -11,7 +12,7 @@ public class BoggleSprite extends Sprite{
 		super();
 		if(boggleSpriteImage == null)
         {
-        	boggleSpriteImage = ImageIO.read(getClass().getResourceAsStream("boggle.png"));
+        	boggleSpriteImage = ImageIO.read(new File("resources/boggle.png"));
             setSpriteImage(boggleSpriteImage);
         }
 		this.x = 900;

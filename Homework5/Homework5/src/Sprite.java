@@ -67,6 +67,11 @@ public abstract class Sprite
         ImageIcon myImage = new ImageIcon(sprite_image);
         imageHeight = myImage.getIconHeight();  //neat hack :)
         imageWidth = myImage.getIconWidth();  //neat hack :)
+        setFloor();
+    }
+
+    public void setFloor()
+    {
         floor = 601 - imageHeight;
     }
     public void setJump(boolean tJump)
