@@ -9,14 +9,21 @@ class Model
 
     static ArrayList<Sprite> ListOfSprites = new ArrayList<Sprite>();
     int numOfFrames = 0;
-    int turtleDeaths = 0;
+    static int score = 0;
     Random rand = new Random();
     Razorback r = new Razorback(0,0); //Add a razorback at position 0,0 (put this as a static for update function
 
 	Model() throws IOException
     {
-        ListOfSprites.add(new Turtle(rand.nextInt(900)+100,0)); //Add an anonymous turtle at any x position but at y=0
-        ListOfSprites.add(new BoggleSprite()); //Adds the boggle sprite
+        //ListOfSprites.add(new Turtle(rand.nextInt(900)+100,0)); //Add an anonymous turtle at any x position but at y=0
+        ListOfSprites.add(new Brick(300,450));
+        ListOfSprites.add(new Brick(350,450));
+        ListOfSprites.add(new Brick(400,450));
+        ListOfSprites.add(new Brick(450,450));
+        ListOfSprites.add(new Brick(500,450));
+        ListOfSprites.add(new Brick(150,550));
+
+        //ListOfSprites.add(new BoggleSprite()); //Adds the boggle sprite
         ListOfSprites.add(r); //Go ahead and add the razorback we created
     }
 
@@ -26,35 +33,15 @@ class Model
         while (i.hasNext())
         {
             Sprite currentSprite = i.next();
-            if(!(currentSprite instanceof Razorback)) //Detect collision for every sprite EXCEPT the Razorback
+            for(Sprite collidingSprite : ListOfSprites)
             {
-                //Hey look! A collision
-                if(r.x + r.imageWidth > currentSprite.x
-                		&& r.x < currentSprite.x + currentSprite.imageWidth
-                        && r.y + r.imageHeight > currentSprite.y                       
-                        && r.y < currentSprite.y + currentSprite.imageHeight && !currentSprite.death)
+                if(currentSprite != collidingSprite && currentSprite.collidesWith(collidingSprite))
                 {
-                    //Was this collision with a turtle? If so then do stuff with player
-                     if(r.y + 10 < currentSprite.y && currentSprite instanceof Turtle)
-                     {
-                        r.bounce();
-                        currentSprite.die();
-                        turtleDeaths++;
-                     }
-                     //It collided with the boggle board!
-                     else if(currentSprite instanceof BoggleSprite)
-                     {
-                         currentSprite.die();
-                         new BoggleGUI();
-                     }
-                     else
-                     {
-                         r.die();
-                         turtleDeaths = 0;
-                     }
+                    currentSprite.handleCollision(collidingSprite);
+                }else
+                {
+                    currentSprite.onPlatform = false;
                 }
-
-
             }
 
             if(currentSprite.update(g) == true )
@@ -73,7 +60,7 @@ class Model
         {
             try
             {
-                ListOfSprites.add(new Turtle(rand.nextInt(900)+100, 0));
+                //ListOfSprites.add(new Turtle(rand.nextInt(900)+100, 0));
             }
             catch(Exception ex)
             {

@@ -44,15 +44,19 @@ public class Razorback extends Sprite
         //Checks if on the ground and right click button was pressed
         if(jumpCharacter && velocity == 0)
         {
-            velocity = 15;
-            jumpCharacter = false;
-
-        }else if(this.y >= floor) //This checks to see if there needs to be a collision with the floor
+            velocity = 13;
+//            jumpCharacter = false;
+        }else if(this.y >= floor) //This checks to see if there needs to be a collide with the floor
+        {
+            velocity = 0;
+            this.y = floor;
+            //todo detect face direction
+            setSpriteImage(razorbackImage);
+        }
+        if(velocity != 0)
         {
             //So it doesn't queue up a jump
             jumpCharacter = false;
-            velocity = 0;
-            this.y = floor;
         }
 
         //Handling walking behavior
@@ -186,5 +190,26 @@ public class Razorback extends Sprite
         this.y = floor;
         this.dest_x = 0;
         this.dest_y = floor;
+    }
+
+
+    void collide(Sprite otherSprite)
+    {
+
+        //Was this collide with a turtle? If so then do stuff with player
+        if(this.y + 10 < otherSprite.y && otherSprite instanceof Turtle)
+        {
+            this.bounce();
+            otherSprite.die();
+            Model.score++;
+        }else if(otherSprite instanceof Turtle)
+        {
+            this.die();
+            Model.score = 0;
+        }else if(otherSprite instanceof BoggleSprite)
+        {
+            otherSprite.die();
+            new BoggleGUI();
+        }
     }
 }

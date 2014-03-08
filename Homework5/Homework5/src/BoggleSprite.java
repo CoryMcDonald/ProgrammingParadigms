@@ -36,4 +36,10 @@ public class BoggleSprite extends Sprite{
 		death = true;
 	}
 
+    @Override
+    void collide(Sprite otherSprite)
+    {
+
+    }
+
 }

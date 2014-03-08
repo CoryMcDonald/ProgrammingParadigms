@@ -27,8 +27,8 @@ class Turtle extends Sprite
         if(turtleImage == null)
         {
             turtleImage = ImageIO.read(new File("resources/turtle1.png"));
-            setSpriteImage(turtleImage);
         }
+        setSpriteImage(turtleImage);
         setFloor();
     }
 
@@ -54,8 +54,10 @@ class Turtle extends Sprite
                     System.out.println(ex.toString());
                 }
             }
+            int differenceInHeight = this.imageHeight;
             setSpriteImage(turtleDeath);
-            this.y = floor;
+            differenceInHeight -= this.imageHeight;
+            this.y += differenceInHeight;
             deathFrame++;
             removeSprite = true;
         }else if(velocity == 0 && this.x > 0)        //Handling moving to left
@@ -116,5 +118,11 @@ class Turtle extends Sprite
     {
         //Some complex code right here
         death = true;
+    }
+
+    @Override
+    void collide(Sprite otherSprite)
+    {
+
     }
 }
