@@ -17,11 +17,12 @@
 				else
 				{
 					//Even though it is sent through HTTP we probably don't want to store password in plaintext
-					//Although MD5 is cryptographically insecure it's better than nothing (and easier than using something like bcrypt)
-					$newaccount = array($_POST["username"] => array("email" => $_POST["email"] , "password" => md5($_POST['password'])));
-
+					//Haha try Rainbow tables now! Muahahahhaha
+					$salt = openssl_random_pseudo_bytes(64, true);
+					$newaccount = array($_POST["username"] => array("email" => $_POST["email"] , "password" => hash('sha256', $_POST['password'] . $salt), "salt"=> $salt ));
 					//Merging the array in order to resave
 					$accounts = array_merge($accounts, $newaccount); 
+				
 
 					//Only open the file if we create a new account
 					$fh = fopen("accounts.json", 'w');
@@ -44,9 +45,9 @@
 					//Found email address, validate username and password
 					$jsonEmail = $accounts[$_POST["username"]]["email"];
 					$jsonPassword = $accounts[$_POST["username"]]["password"];
-
+					$jsonSalt = $accounts[$_POST["username"]]["email"];
 					//Comparing strings, want to make sure casing on email doesn't matter but casing on password does.
-					if(strcasecmp($jsonEmail, $_POST["email"]) == 0 && $jsonPassword == md5($_POST["password"]))
+					if(strcasecmp($jsonEmail, $_POST["email"]) == 0 && $jsonPassword ==  hash('sha256', $_POST['password'] . $jsonSalt))
 					{
 						$_SESSION["username"] = $_POST["username"];
 						$_SESSION["email"] = $_POST["email"];
