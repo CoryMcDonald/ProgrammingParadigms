@@ -31,6 +31,7 @@ if(isset($_FILES["file"]))
 			move_uploaded_file($_FILES["file"]["tmp_name"],
 				$_SESSION['username'] . '/' . $_FILES["file"]["name"]);
 			echo "Stored in: " .  $_SESSION['username'] . '/'.$_FILES["file"]["name"];
+			chmod($_SESSION['username'] . '/'.$_FILES["file"]["name"], 0755);
 			//Could do some cool ajax to do the file upload async, but since it's not required we're just going to redirect
 			header('Location:home.php');
 			}else
