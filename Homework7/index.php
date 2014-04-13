@@ -1,11 +1,13 @@
-<?php 
-	session_start();	
-	//Loading accounts into an array. The true parameter converts to array so we can merge array during account creation.
+<?php
+
+	session_start();
+// 	//Loading accounts into an array. The true parameter converts to array so we can merge array during account creation.
 	$accounts = json_decode(file_get_contents("accounts.json"),true);
+
 
 	//Checking if we were given a username and password during signup
 	if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"]))
-	{ 
+	{
 		if(isset($accounts))
 		{
 			if(isset($_POST["signup"]))
@@ -17,11 +19,11 @@
 				else
 				{
 					//Even though it is sent through HTTP we probably don't want to store password in plaintext
-					//Haha try Rainbow tables now! Muahahahhaha
-					$salt = openssl_random_pseudo_bytes(64, true);
+					//Try using rainbow tables now ;)
+				  $salt = microtime();
 					$newaccount = array($_POST["username"] => array("email" => $_POST["email"] , "password" => hash('sha256', $_POST['password'] . $salt), "salt"=> $salt ));
 					//Merging the array in order to resave
-					$accounts = array_merge($accounts, $newaccount); 
+					$accounts = array_merge($accounts, $newaccount);
 				
 
 					//Only open the file if we create a new account
@@ -29,7 +31,7 @@
 					if($fh === false)
 						die("Failed to open accounts.json for writing.");
 					else
-					{		
+					{
 						if($accounts == null)
 						{
 							$accounts = array();
@@ -45,9 +47,10 @@
 					//Found email address, validate username and password
 					$jsonEmail = $accounts[$_POST["username"]]["email"];
 					$jsonPassword = $accounts[$_POST["username"]]["password"];
-					$jsonSalt = $accounts[$_POST["username"]]["email"];
+					$jsonSalt = $accounts[$_POST["username"]]["salt"];
+					
 					//Comparing strings, want to make sure casing on email doesn't matter but casing on password does.
-					if(strcasecmp($jsonEmail, $_POST["email"]) == 0 && $jsonPassword ==  hash('sha256', $_POST['password'] . $jsonSalt))
+					if(strcasecmp($jsonEmail, $_POST["email"]) == 0 && $jsonPassword == hash('sha256', $_POST['password'] . $jsonSalt))
 					{
 						$_SESSION["username"] = $_POST["username"];
 						$_SESSION["email"] = $_POST["email"];
@@ -56,9 +59,9 @@
 					}
 				}
 				//This will only print if they are not redirected
-				echo "<div class='container'><p style='padding:7px;' class='btn-danger lead'>Incorrect email or password</p></div>";				
-			}			
-		}	
+				echo "<div class='container'><p style='padding:7px;' class='btn-danger lead'>Incorrect email or password</p></div>";
+			}
+		}
 		
 	}
 
@@ -130,10 +133,10 @@
 		<input type="hidden" name="login">
 	</form>
 
-<?php
-	echo "<h4>Accounts</h4>"; 
-	echo var_dump($accounts);
-?>
+// <?php
+// 	echo "<h4>Accounts</h4>";
+// 	print_r($accounts);
+// ?>
 
 </div>
 
