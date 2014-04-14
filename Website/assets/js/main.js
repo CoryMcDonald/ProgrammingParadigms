@@ -11,11 +11,11 @@ var jumpTimer = 0;
 var map;
 var layer;
 var shiftKey;
-var maxStamina = 25;
+var maxStamina = 150;
 var stamina = maxStamina;
 var staminaDisplay;
-var runSpeed = 2;
-var walkSpeed= 1;
+var runSpeed = 200;
+var walkSpeed= 100;
 var characterSpeed = walkSpeed;
 var facing = '';
 
@@ -24,9 +24,14 @@ var enemyBullets;
 var enemiesTotal = 0;
 var enemiesAlive = 0;
 var explosions;
-
+var nextFire = 200;
+var fireRate = 200;
 var bullets;
-
+var turret;
+var healthBar;
+var staminaBar;
+var maxHealth = 35;
+var health = maxHealth;
 function preload() {
 
     // game.load.tilemap('mario', 'assets/world.json', null, Phaser.Tilemap.TILED_JSON);
@@ -35,34 +40,27 @@ function preload() {
     // game.load.image('player', 'assets/pics/ball.png');
     game.load.atlas('enemy', 'assets/pics/tanks.png', 'assets/pics/tanks.json');
     game.load.spritesheet('player', 'assets/pics/dude.png', 32, 48);
+    game.load.image('bullet', 'assets/pics/bullet.png');
+    game.load.image('turret', 'assets/pics/bullet.png');
+    game.load.image('floor', 'assets/pics/floor.png');
 
 }
 
 function create() {
-    game.stage.backgroundColor = '#000000';
+    // game.stage.backgroundColor = '#000000';
 
-    var text = "Stamina: " + stamina;
-    var style = { font: "12px Arial", fill: "#ffffff" };
+    
+    game.add.tileSprite(0, 0, 2000, 2000, 'floor');
+    game.world.setBounds(0, 0, 1400, 1400);
 
-    staminaDisplay = game.add.text(50, 0, text,style);
-
-    //  The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
-    //  The second parameter maps this name to the Phaser.Cache key 'tiles'
-    //  Creates a blank tilemap
-    map = game.add.tilemap();
-
-    //  Add a Tileset image to the map
-    // map.addTilesetImage('tiles');
-    // layer = map.create('level1', 40, 30, 32, 32);
-
-
-    //  This resizes the game world to match the layer dimensions
-    // layer.resizeWorld();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     player = game.add.sprite(25, game.world.centerY, 'player');
-    
+    healthBar = new Phaser.Rectangle(player.x, player.y-10, health, 7);
+    staminaBar = new Phaser.Rectangle(5, 0, 10, -stamina);
+
+
     
     player.checkWorldBounds = true;
     game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -98,6 +96,18 @@ function create() {
     enemyBullets.setAll('outOfBoundsKill', true);
     enemyBullets.setAll('checkWorldBounds', true);
 
+    //  Our bullet group
+    bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bullets.createMultiple(30, 'bullet', 0, false);
+    bullets.setAll('anchor.x', 0.5);
+    bullets.setAll('anchor.y', 0.5);
+    bullets.setAll('outOfBoundsKill', true);
+    bullets.setAll('checkWorldBounds', true);
+
+
+
     //  Create some baddies to waste :)
     enemies = [];
 
@@ -106,7 +116,7 @@ function create() {
 
     for (var i = 0; i < enemiesTotal; i++)
     {
-        enemies.push(new Enemy(i, game, player, enemyBullets));
+        enemies.push(new Enemy(i, game, player, enemyBullets, turret));
     }
 
     
@@ -116,11 +126,20 @@ function create() {
 
 function update() {
     // game.physics.arcade.collide(player);
+    game.debug.geom(healthBar,'#ff0000');
+    game.debug.geom(staminaBar,'#000000');
+    
+    game.physics.arcade.overlap(enemyBullets, player, bulletHitPlayer, null, this);
 
-    // game.physics.arcade.overlap(enemyBullets, player, bulletHitPlayer, null, this);
-
+    //Debuging sprite boundries
+    // game.debug.spriteBounds(player);
+    
     enemiesAlive = 0;
 
+
+    player.body.velocity.x = 0;
+    player.body.velocity.y = 0;
+    
     for (var i = 0; i < enemies.length; i++)
     {
         if (enemies[i].alive)
@@ -138,16 +157,15 @@ function update() {
     {
         makeCharacterWalk();
     }
-    
     if (cursors.left.isDown) {
-	   player.x -= characterSpeed;
+        player.body.velocity.x = -characterSpeed;
 	   if (facing != 'left')
         {
             player.animations.play('left');
             facing = 'left';
         }
     } else if (cursors.right.isDown) {
-	   player.x += characterSpeed;
+        player.body.velocity.x = +characterSpeed;
 	   if (facing != 'right')
         {
             player.animations.play('right');
@@ -172,9 +190,12 @@ function update() {
         }
     }
     if (cursors.up.isDown) {
-	   player.y -= characterSpeed;
+        
+        player.body.velocity.y = -characterSpeed;
+	   
     } else if (cursors.down.isDown) {
-	   player.y += characterSpeed;
+        
+        player.body.velocity.y = characterSpeed;
     }
     
     if(characterSpeed == runSpeed && (cursors.left.isDown || cursors.right.isDown || cursors.up.isDown || cursors.down.isDown))
@@ -184,7 +205,17 @@ function update() {
     {
        increaseStamina();
     }
-    staminaDisplay.setText('Stamina: ' + stamina + '\ncharacterSpeed: ' + characterSpeed);
+    
+    
+    
+    if (game.input.activePointer.isDown)
+    {
+        //  Boom!
+        fire();
+    }
+
+    displayPlayerHeath();
+    displayStaminaBar();
 }
 
 var nextStaminaIncrease = 0;
@@ -205,9 +236,14 @@ function decreaseStamina()
         stamina--;
     }
 }
+function displayStaminaBar()
+{
+    this.staminaBar.y = game.camera.y + 300;
+    this.staminaBar.x = game.camera.x + 20;
+    this.staminaBar.height = -this.stamina;
+}
 function render()
 {
-
 }
 function makeCharacterRun()
 {
@@ -224,9 +260,21 @@ function updateCharacterSpeed(newSpeed) {
 function bulletHitPlayer (tank, bullet) {
 
     bullet.kill();
-
+    health -= 5;
+    if(health <= 0)
+    {
+        player.reset(0,50);
+        health = maxHealth;
+        stamina = maxStamina;
+    }
 }
-function bulletHitEnemy (tank, bullet) {
+function displayPlayerHeath()
+{
+    this.healthBar.x = this.player.x;
+    this.healthBar.y = this.player.y - 10;
+    this.healthBar.width = this.health;
+}
+function bulletHitEnemy (enemy, bullet) {
 
     bullet.kill();
 
@@ -234,34 +282,53 @@ function bulletHitEnemy (tank, bullet) {
 
     if (destroyed)
     {
+        
         // var explosionAnimation = explosions.getFirstExists(false);
-        // explosionAnimation.reset(tank.x, tank.y);
+        // explosionAnimation.reset(enemy.x, enemy.y);
         // explosionAnimation.play('kaboom', 30, false, true);
+    }
+
+}
+function fire () {
+
+    if (game.time.now > nextFire && bullets.countDead() > 0)
+    {
+        nextFire = game.time.now + fireRate;
+
+        var bullet = bullets.getFirstExists(false);
+
+        bullet.reset(player.x, player.y);
+
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 1000, game.input.activePointer, 500);
     }
 
 }
 
 /////Enemies!
-Enemy = function (index, game, player, bullets) {
+Enemy = function (index, game, player, bullets, turret) {
 
     var x = game.world.randomX;
     var y = game.world.randomY;
+    
+    // var x = 100;
+    // var y = game.world.centerY;
 
     this.game = game;
-    this.health = 3;
+    this.health = 30;
     this.player = player;
     this.bullets = bullets;
-    this.fireRate = 1000;
+    this.fireRate = 2000;
     this.nextFire = 0;
     this.alive = true;
 
     // this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
     this.enemy = game.add.sprite(x, y, 'enemy', 'tank1');
-    // this.turret = game.add.sprite(x, y, 'enemy', 'turret');
+    this.turret = game.add.sprite(x, y, 'enemy', 'turret');
+
 
     // this.shadow.anchor.set(0.5);
-    // this.tank.anchor.set(0.5);
-    // this.turret.anchor.set(0.3, 0.5);
+    this.enemy.anchor.set(0.5);
+    this.turret.anchor.set(0.3, 0.5);
 
     this.enemy.name = index.toString();
     game.physics.enable(this.enemy, Phaser.Physics.ARCADE);
@@ -269,23 +336,27 @@ Enemy = function (index, game, player, bullets) {
     this.enemy.body.collideWorldBounds = true;
     this.enemy.body.bounce.setTo(1, 1);
 
-    this.enemy.angle = game.rnd.angle();
+    // this.enemy.angle = game.rnd.angle();
 
-    game.physics.arcade.velocityFromRotation(this.enemy.rotation, 100, this.enemy.body.velocity);
+    // game.physics.arcade.velocityFromRotation(this.enemy.rotation, 100, this.enemy.body.velocity);
+    
 
+    this.enemyHealthBar = new Phaser.Rectangle(this.enemy.x - this.health/2, this.enemy.y - 50, this.health, 7);
+    // this.enemyHealthBar.anchor.set(0.5);
 };
 
 Enemy.prototype.damage = function() {
 
-    this.health -= 1;
+    this.health -= 10;
 
+    this.enemyHealthBar.width = this.health;
     if (this.health <= 0)
     {
         this.alive = false;
 
         // this.shadow.kill();
         this.enemy.kill();
-        // this.turret.kill();
+        this.turret.kill();
 
         return true;
     }
@@ -299,23 +370,28 @@ Enemy.prototype.update = function() {
     // this.shadow.x = this.tank.x;
     // this.shadow.y = this.tank.y;
     // this.shadow.rotation = this.tank.rotation;
+    // game.debug.geom(this.enemyHealthBar,'#ff0000');
 
-    // this.turret.x = this.tank.x;
-    // this.turret.y = this.tank.y;
-    // this.turret.rotation = this.game.physics.arcade.angleBetween(this.tank, this.player);
+    this.turret.x = this.enemy.x;
+    this.turret.y = this.enemy.y;
+    this.turret.rotation = this.game.physics.arcade.angleBetween(this.enemy, this.player);
 
     if (this.game.physics.arcade.distanceBetween(this.enemy, this.player) < 300)
     {
         if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
         {
+            
             this.nextFire = this.game.time.now + this.fireRate;
 
             var bullet = this.bullets.getFirstDead();
 
-            bullet.reset(this.x, this.y);
+            bullet.reset(this.turret.x, this.turret.y);
 
             bullet.rotation = this.game.physics.arcade.moveToObject(bullet, this.player, 500);
         }
     }
+    
+    // this.enemyHealthBar.x = this.enemy.x - this.health/2;
+    // this.enemyHealthBar.y = this.enemy.y - 50;
 
 };
