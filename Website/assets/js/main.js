@@ -32,6 +32,9 @@ var healthBar;
 var staminaBar;
 var maxHealth = 35;
 var health = maxHealth;
+var keySprite;
+
+//blazeman
 function preload() {
 
     // game.load.tilemap('mario', 'assets/world.json', null, Phaser.Tilemap.TILED_JSON);
@@ -43,6 +46,8 @@ function preload() {
     game.load.image('bullet', 'assets/pics/bullet.png');
     game.load.image('turret', 'assets/pics/bullet.png');
     game.load.image('floor', 'assets/pics/floor.png');
+    game.load.image('keySprite', 'assets/pics/keySprite.gif');
+    game.load.spritesheet('kaboom', 'assets/pics/explosion.png', 64, 64, 23);
 
 }
 
@@ -59,7 +64,6 @@ function create() {
     player = game.add.sprite(25, game.world.centerY, 'player');
     healthBar = new Phaser.Rectangle(player.x, player.y-10, health, 7);
     staminaBar = new Phaser.Rectangle(5, 0, 10, -stamina);
-
 
     
     player.checkWorldBounds = true;
@@ -106,6 +110,15 @@ function create() {
     bullets.setAll('outOfBoundsKill', true);
     bullets.setAll('checkWorldBounds', true);
 
+     //  Explosion pool
+    explosions = game.add.group();
+
+    for (var i = 0; i < 10; i++)
+    {
+        var explosionAnimation = explosions.create(0, 0, 'kaboom', [0], false);
+        explosionAnimation.anchor.setTo(0.5, 0.5);
+        explosionAnimation.animations.add('kaboom');
+    }
 
 
     //  Create some baddies to waste :)
@@ -213,7 +226,6 @@ function update() {
         //  Boom!
         fire();
     }
-
     displayPlayerHeath();
     displayStaminaBar();
 }
@@ -263,7 +275,8 @@ function bulletHitPlayer (tank, bullet) {
     health -= 5;
     if(health <= 0)
     {
-        player.reset(0,50);
+        // player.x = 0;
+        // player.y =0;
         health = maxHealth;
         stamina = maxStamina;
     }
@@ -282,10 +295,9 @@ function bulletHitEnemy (enemy, bullet) {
 
     if (destroyed)
     {
-        
-        // var explosionAnimation = explosions.getFirstExists(false);
-        // explosionAnimation.reset(enemy.x, enemy.y);
-        // explosionAnimation.play('kaboom', 30, false, true);
+        var explosionAnimation = explosions.getFirstExists(false);
+        explosionAnimation.reset(enemy.x, enemy.y);
+        explosionAnimation.play('kaboom', 30, false, true);
     }
 
 }
@@ -317,14 +329,16 @@ Enemy = function (index, game, player, bullets, turret) {
     this.health = 30;
     this.player = player;
     this.bullets = bullets;
-    this.fireRate = 2000;
+    this.fireRate = 3000;
     this.nextFire = 0;
     this.alive = true;
 
     // this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
     this.enemy = game.add.sprite(x, y, 'enemy', 'tank1');
     this.turret = game.add.sprite(x, y, 'enemy', 'turret');
-
+    // this.keySprite = game.add.sprite(x, y, 'enemy', 'keySprite');
+        
+    this.keySprite = "";
 
     // this.shadow.anchor.set(0.5);
     this.enemy.anchor.set(0.5);
@@ -336,9 +350,9 @@ Enemy = function (index, game, player, bullets, turret) {
     this.enemy.body.collideWorldBounds = true;
     this.enemy.body.bounce.setTo(1, 1);
 
-    // this.enemy.angle = game.rnd.angle();
+    this.enemy.angle = game.rnd.angle();
 
-    // game.physics.arcade.velocityFromRotation(this.enemy.rotation, 100, this.enemy.body.velocity);
+    game.physics.arcade.velocityFromRotation(this.enemy.rotation, 100, this.enemy.body.velocity);
     
 
     this.enemyHealthBar = new Phaser.Rectangle(this.enemy.x - this.health/2, this.enemy.y - 50, this.health, 7);
@@ -353,10 +367,16 @@ Enemy.prototype.damage = function() {
     if (this.health <= 0)
     {
         this.alive = false;
-
+        //1 out of 4 chance that you will get a key
+        if(Math.floor((Math.random()*4)+1) == 1 )
+        {
+            this.keySprite = game.add.sprite(this.enemy.x, this.enemy.y, 'keySprite');
+        }
+        
         // this.shadow.kill();
         this.enemy.kill();
         this.turret.kill();
+        
 
         return true;
     }
@@ -376,7 +396,7 @@ Enemy.prototype.update = function() {
     this.turret.y = this.enemy.y;
     this.turret.rotation = this.game.physics.arcade.angleBetween(this.enemy, this.player);
 
-    if (this.game.physics.arcade.distanceBetween(this.enemy, this.player) < 300)
+    if (this.game.physics.arcade.distanceBetween(this.enemy, this.player) < 400)
     {
         if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
         {
@@ -395,3 +415,9 @@ Enemy.prototype.update = function() {
     // this.enemyHealthBar.y = this.enemy.y - 50;
 
 };
+
+/*
+Better Weapons
+
+
+*/
