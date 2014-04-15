@@ -32,9 +32,9 @@ var healthBar;
 var staminaBar;
 var maxHealth = 35;
 var health = maxHealth;
-var keySprite;
-
-//blazeman
+var coinSprite;
+var gameOver = false;
+var healthPotions;
 function preload() {
 
     // game.load.tilemap('mario', 'assets/world.json', null, Phaser.Tilemap.TILED_JSON);
@@ -46,11 +46,14 @@ function preload() {
     game.load.image('bullet', 'assets/pics/bullet.png');
     game.load.image('turret', 'assets/pics/bullet.png');
     game.load.image('floor', 'assets/pics/floor.png');
-    game.load.image('keySprite', 'assets/pics/keySprite.gif');
+    game.load.image('coinSprite', 'assets/pics/coinSprite.gif');
+    game.load.image('healthSprite', 'assets/pics/healthPotion.gif');
     game.load.spritesheet('kaboom', 'assets/pics/explosion.png', 64, 64, 23);
 
 }
 
+var textGroup;
+var debugText;
 function create() {
     // game.stage.backgroundColor = '#000000';
 
@@ -64,6 +67,7 @@ function create() {
     player = game.add.sprite(25, game.world.centerY, 'player');
     healthBar = new Phaser.Rectangle(player.x, player.y-10, health, 7);
     staminaBar = new Phaser.Rectangle(5, 0, 10, -stamina);
+
 
     
     player.checkWorldBounds = true;
@@ -110,17 +114,6 @@ function create() {
     bullets.setAll('outOfBoundsKill', true);
     bullets.setAll('checkWorldBounds', true);
 
-     //  Explosion pool
-    explosions = game.add.group();
-
-    for (var i = 0; i < 10; i++)
-    {
-        var explosionAnimation = explosions.create(0, 0, 'kaboom', [0], false);
-        explosionAnimation.anchor.setTo(0.5, 0.5);
-        explosionAnimation.animations.add('kaboom');
-    }
-
-
     //  Create some baddies to waste :)
     enemies = [];
 
@@ -132,52 +125,190 @@ function create() {
         enemies.push(new Enemy(i, game, player, enemyBullets, turret));
     }
 
-    
-}
-//An adventure game where you retrieve holy artifacts with cyclops while upgrading your gear.
+     //  Explosion pool
+    explosions = game.add.group();
 
+    for (var i = 0; i < 10; i++)
+    {
+        var explosionAnimation = explosions.create(0, 0, 'kaboom', [0], false);
+        explosionAnimation.anchor.setTo(0.5, 0.5);
+        explosionAnimation.animations.add('kaboom');
+    }
+
+
+    healthPotions = [];
+    for (var i = 0; i < 5; i++)
+    {
+        healthPotions.push(game.add.sprite(game.world.randomX, game.world.randomY, 'healthSprite'));
+       
+        game.physics.enable(healthPotions[i], Phaser.Physics.ARCADE);
+    }
+
+    addText();
+}
+function addText()
+{
+        //Text
+    textGroup = game.add.group();
+    debugText = new Phaser.Text(game, 0, 0, "Text", { font:"16 Arial", fill:"#ffffff;"});
+    debugText.fixedToCamera = true;
+    debugText.stroke = '#000000';
+    debugText.strokeThickness = 2;
+    debugText.cameraOffset.setTo(650,20);
+    
+    
+    var instructionText = new Phaser.Text(game, 0, 0,
+    "Instructions: \nUse Arrows keys to move around \nUse mouse to shoot \nShift to run", { font:"16 Arial", fill:"#ffffff;"});
+    instructionText.fixedToCamera = true;
+    instructionText.stroke = '#000000';
+    instructionText.strokeThickness = 2;
+    instructionText.cameraOffset.setTo(10, 20);
+    
+    
+    var staminaBarText = new Phaser.Text(game, 0, 0, "Stamina", { font:"12 Arial", fill:"#ffffff;", align: "center"});
+    staminaBarText.fixedToCamera = true;
+    staminaBarText.stroke = '#000000';
+    staminaBarText.strokeThickness = 2;
+    staminaBarText.cameraOffset.setTo(0, 220);
+    textGroup.add(staminaBarText);
+    
+    textGroup.add(instructionText);
+    textGroup.add(debugText);
+}
 
 function update() {
     // game.physics.arcade.collide(player);
     game.debug.geom(healthBar,'#ff0000');
-    game.debug.geom(staminaBar,'#000000');
+    game.debug.geom(staminaBar,'#8FD8D8');
     
     game.physics.arcade.overlap(enemyBullets, player, bulletHitPlayer, null, this);
-
-    //Debuging sprite boundries
-    // game.debug.spriteBounds(player);
     
-    enemiesAlive = 0;
-
-
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
     
-    for (var i = 0; i < enemies.length; i++)
+    
+    enemiesAlive = 0;
+
+ 
+
+    if(gameOver == false)
     {
-        if (enemies[i].alive)
+        for (var i = 0; i < enemies.length; i++)
         {
-            enemiesAlive++;
-            game.physics.arcade.collide(player, enemies[i].enemy);
-            game.physics.arcade.overlap(bullets, enemies[i].enemy, bulletHitEnemy, null, this);
-            enemies[i].update();
+            if (enemies[i].alive)
+            {
+                enemiesAlive++;
+                game.physics.arcade.collide(player, enemies[i].enemy);
+                game.physics.arcade.overlap(bullets, enemies[i].enemy, bulletHitEnemy, null, this);
+                enemies[i].update();
+            }else
+            {
+                game.physics.arcade.overlap(player, enemies[i].coinSprite, playerCollectCoin, null, this);
+            }
+        }
+        if(enemiesAlive == 0)
+        {
+            gameWon();
+        }
+        
+        for (var i = 0; i < healthPotions.length; i++)
+        {
+            // console.log(healthPotions[i])
+            game.physics.arcade.overlap(player, healthPotions[i], addHealth, null, this);
+        }
+    
+    
+        playerMovement();
+    
+        
+        if (game.input.activePointer.isDown)
+        {
+            fire();
+        }
+        
+        displayPlayerHeath();
+        displayStaminaBar();
+    }else
+    {
+        player.kill();
+        for (var i = 0; i < enemies.length; i++)
+        {
+            if (enemies[i].alive)
+            {
+                enemies[i].enemy.kill();
+                enemies[i].turret.kill();
+            }
         }
     }
+    //Debug text
+    displayDebug();
+}
+function addHealth(player, healthPotion)
+{
+    healthPotion.kill();
+    if(health + 5 < maxHealth)
+    {
+        health += 5;
+    }else
+    {
+        health = maxHealth;
+    }
+}
+var score =0;
+function playerCollectCoin(player, coin)
+{
+    coin.kill();
+    score ++;
+}
+function displayDebug()
+{
+    //Debuging sprite boundries
+    // game.debug.spriteBounds(player);
+    
+    debugText.setText(
+        "Health: " + health + "\n" +
+        "maxHealth: " + maxHealth + "\n" +
+        "Stamina: " + stamina + "\n" +
+        "maxStamina: " + maxStamina + "\n" +
+        "characterSpeed: " + characterSpeed + "\n" +
+        "enemiesAlive: " + enemiesAlive + "\n" +
+        "score: " + score + "\n"
+        );
+}
+function gameWon()
+{
 
+    emitter = game.add.emitter(player.x , player.y - 500, 200);
 
+    emitter.makeParticles('coinSprite');
 
+    //	false means don't explode all the sprites at once, but instead release at a rate of 20 particles per frame
+    //	The 5000 value is the lifespan of each particle
+    emitter.start(false, 5000, 20);
+    var wonText = new Phaser.Text(game, 0, 0, "CONGRATULATIONS!\nYOU WON!", { font:"65 Arial", fill:"#ffffff;", align: "center"});
+    wonText.fixedToCamera = true;
+    wonText.stroke = '#000000';
+    wonText.strokeThickness = 2;
+    wonText.cameraOffset.setTo(50, 220);
+    textGroup.add(wonText);
+    gameOver = true;
+    
+
+}
+function playerMovement()
+{
     if(stamina <= 0)
     {
         makeCharacterWalk();
     }
-    if (cursors.left.isDown) {
+    if (cursors.left.isDown || game.input.keyboard.isDown(Phaser.Keyboard.A)) {
         player.body.velocity.x = -characterSpeed;
 	   if (facing != 'left')
         {
             player.animations.play('left');
             facing = 'left';
         }
-    } else if (cursors.right.isDown) {
+    } else if (cursors.right.isDown || game.input.keyboard.isDown(Phaser.Keyboard.D)) {
         player.body.velocity.x = +characterSpeed;
 	   if (facing != 'right')
         {
@@ -202,32 +333,24 @@ function update() {
             facing = 'idle';
         }
     }
-    if (cursors.up.isDown) {
+    if (cursors.up.isDown || game.input.keyboard.isDown(Phaser.Keyboard.W)) {
         
         player.body.velocity.y = -characterSpeed;
 	   
-    } else if (cursors.down.isDown) {
+    } else if (cursors.down.isDown || game.input.keyboard.isDown(Phaser.Keyboard.S)) {
         
         player.body.velocity.y = characterSpeed;
     }
     
-    if(characterSpeed == runSpeed && (cursors.left.isDown || cursors.right.isDown || cursors.up.isDown || cursors.down.isDown))
+    if(characterSpeed == runSpeed && (cursors.left.isDown || cursors.right.isDown || cursors.up.isDown || cursors.down.isDown ||
+         game.input.keyboard.isDown(Phaser.Keyboard.W) || game.input.keyboard.isDown(Phaser.Keyboard.A) || game.input.keyboard.isDown(Phaser.Keyboard.S)
+         || game.input.keyboard.isDown(Phaser.Keyboard.D)))
     {
         decreaseStamina();
     }else if(characterSpeed == walkSpeed)
     {
        increaseStamina();
     }
-    
-    
-    
-    if (game.input.activePointer.isDown)
-    {
-        //  Boom!
-        fire();
-    }
-    displayPlayerHeath();
-    displayStaminaBar();
 }
 
 var nextStaminaIncrease = 0;
@@ -250,7 +373,7 @@ function decreaseStamina()
 }
 function displayStaminaBar()
 {
-    this.staminaBar.y = game.camera.y + 300;
+    this.staminaBar.y = game.camera.y + 400;
     this.staminaBar.x = game.camera.x + 20;
     this.staminaBar.height = -this.stamina;
 }
@@ -272,32 +395,37 @@ function updateCharacterSpeed(newSpeed) {
 function bulletHitPlayer (tank, bullet) {
 
     bullet.kill();
-    health -= 5;
+    health -= 2;
     if(health <= 0)
     {
-        // player.x = 0;
-        // player.y =0;
-        health = maxHealth;
-        stamina = maxStamina;
+        var gameOverText = new Phaser.Text(game, 0, 0, "GAME OVER", { font:"65 Arial", fill:"#ffffff;"});
+        gameOverText.fixedToCamera = true;
+        gameOverText.stroke = '#000000';
+        gameOverText.strokeThickness = 2;
+        gameOverText.cameraOffset.setTo(200, 200);
+        textGroup.add(gameOverText);
+        gameOver = true;
     }
 }
 function displayPlayerHeath()
 {
     this.healthBar.x = this.player.x;
     this.healthBar.y = this.player.y - 10;
-    this.healthBar.width = this.health;
+    if( this.healthBar.width != this.health)
+    {
+        this.healthBar.width = this.health;
+    }
 }
 function bulletHitEnemy (enemy, bullet) {
 
     bullet.kill();
-
     var destroyed = enemies[enemy.name].damage();
-
     if (destroyed)
     {
         var explosionAnimation = explosions.getFirstExists(false);
         explosionAnimation.reset(enemy.x, enemy.y);
         explosionAnimation.play('kaboom', 30, false, true);
+        
     }
 
 }
@@ -336,9 +464,7 @@ Enemy = function (index, game, player, bullets, turret) {
     // this.shadow = game.add.sprite(x, y, 'enemy', 'shadow');
     this.enemy = game.add.sprite(x, y, 'enemy', 'tank1');
     this.turret = game.add.sprite(x, y, 'enemy', 'turret');
-    // this.keySprite = game.add.sprite(x, y, 'enemy', 'keySprite');
         
-    this.keySprite = "";
 
     // this.shadow.anchor.set(0.5);
     this.enemy.anchor.set(0.5);
@@ -353,7 +479,7 @@ Enemy = function (index, game, player, bullets, turret) {
     this.enemy.angle = game.rnd.angle();
 
     game.physics.arcade.velocityFromRotation(this.enemy.rotation, 100, this.enemy.body.velocity);
-    
+    this.coinSprite;
 
     this.enemyHealthBar = new Phaser.Rectangle(this.enemy.x - this.health/2, this.enemy.y - 50, this.health, 7);
     // this.enemyHealthBar.anchor.set(0.5);
@@ -368,9 +494,12 @@ Enemy.prototype.damage = function() {
     {
         this.alive = false;
         //1 out of 4 chance that you will get a key
-        if(Math.floor((Math.random()*4)+1) == 1 )
+        // if(Math.floor((Math.random()*4)+1) == 1 )
+        if(true)
         {
-            this.keySprite = game.add.sprite(this.enemy.x, this.enemy.y, 'keySprite');
+            this.coinSprite = game.add.sprite(this.enemy.x, this.enemy.y, 'coinSprite');
+            game.physics.enable(this.coinSprite, Phaser.Physics.ARCADE);
+        
         }
         
         // this.shadow.kill();
