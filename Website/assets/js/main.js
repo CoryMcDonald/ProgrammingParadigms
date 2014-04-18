@@ -1,3 +1,31 @@
+
+/*Bugs
+*/
+
+/*
+TODO
+    UFO to drive around in, potentially removing shooting from alien in favor of getting to the ufo on the map and then shooting
+    Add splashscreen/loading/etc whatever have you
+    Add poewrups
+        Invincibility
+        Rapid Fire
+        (If remove shooting) Gun
+        Laser that continuesly damages enemies
+    Add more enemies
+        Soliders
+        Planes
+    Add walls, obstrucitnos, scenery
+    Add unlockables, I.E. an enemy can unlock something, a gate, something.
+    
+    Levels
+        - First level soliders
+        - Second level soliders and tanks
+        - Third level soliders, tanks, planes
+    Come up with name
+    Improve game graphics
+
+*/
+
 //Globals
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', {
     preload: preload,
@@ -24,17 +52,18 @@ var enemyBullets;
 var enemiesTotal = 0;
 var enemiesAlive = 0;
 var explosions;
-var nextFire = 200;
-var fireRate = 200;
+var nextFire = 0;
+var fireRate = 100;
 var bullets;
 var turret;
 var healthBar;
 var staminaBar;
-var maxHealth = 35;
+var maxHealth = 50;
 var health = maxHealth;
 var coinSprite;
 var gameOver = false;
 var healthPotions;
+var pause = false;
 function preload() {
 
     // game.load.tilemap('mario', 'assets/world.json', null, Phaser.Tilemap.TILED_JSON);
@@ -49,11 +78,19 @@ function preload() {
     game.load.image('coinSprite', 'assets/pics/coinSprite.gif');
     game.load.image('healthSprite', 'assets/pics/healthPotion.gif');
     game.load.spritesheet('kaboom', 'assets/pics/explosion.png', 64, 64, 23);
+    
+    
+        game.load.spritesheet('button', 'assets/pics/button.png', 193, 71);
 
+    //HUD
+    game.load.image('health', 'assets/pics/Health.png');
+    game.load.image('hud', 'assets/pics/hud.png');
+    game.load.image('stamina', 'assets/pics/stamina.png');
 }
 
 var textGroup;
 var debugText;
+var hud;
 function create() {
     // game.stage.backgroundColor = '#000000';
 
@@ -64,11 +101,19 @@ function create() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    player = game.add.sprite(25, game.world.centerY, 'player');
-    healthBar = new Phaser.Rectangle(player.x, player.y-10, health, 7);
-    staminaBar = new Phaser.Rectangle(5, 0, 10, -stamina);
+    player = game.add.sprite(25, 0, 'player');
+    healthBar = game.add.sprite(0, 0, 'health');
+    healthBar.fixedToCamera = true;
+    healthBar.cameraOffset.setTo(100,580);
+    
+    staminaBar = game.add.sprite(0, 0, 'stamina');
+    staminaBar.fixedToCamera = true;
+    staminaBar.cameraOffset.setTo(400,580);
 
-
+    hud = game.add.sprite(0, 0, 'hud');
+    hud.fixedToCamera = true;
+    hud.cameraOffset.setTo(75,570);
+    hud.width = 600;
     
     player.checkWorldBounds = true;
     game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -92,6 +137,15 @@ function create() {
     player.animations.add('turn', [4], 20, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
     
+    
+    healthPotions = [];
+    for (var i = 0; i < 5; i++)
+    {
+        healthPotions.push(game.add.sprite(game.world.randomX, game.world.randomY, 'healthSprite'));
+       
+        game.physics.enable(healthPotions[i], Phaser.Physics.ARCADE);
+    }
+    
     //Create enemies
     
     enemyBullets = game.add.group();
@@ -109,10 +163,11 @@ function create() {
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
     bullets.createMultiple(30, 'bullet', 0, false);
-    bullets.setAll('anchor.x', 0.5);
-    bullets.setAll('anchor.y', 0.5);
-    bullets.setAll('outOfBoundsKill', true);
+    bullets.setAll('anchor.x', 0);
+    bullets.setAll('anchor.y', 0);
     bullets.setAll('checkWorldBounds', true);
+    bullets.setAll('outOfBoundsKill', true);
+    
 
     //  Create some baddies to waste :)
     enemies = [];
@@ -136,13 +191,7 @@ function create() {
     }
 
 
-    healthPotions = [];
-    for (var i = 0; i < 5; i++)
-    {
-        healthPotions.push(game.add.sprite(game.world.randomX, game.world.randomY, 'healthSprite'));
-       
-        game.physics.enable(healthPotions[i], Phaser.Physics.ARCADE);
-    }
+    
 
     addText();
 }
@@ -150,7 +199,7 @@ function addText()
 {
         //Text
     textGroup = game.add.group();
-    debugText = new Phaser.Text(game, 0, 0, "Text", { font:"16 Arial", fill:"#ffffff;"});
+    debugText = new Phaser.Text(game, 0, 0, "Text", { font:"16 Arial", fill:"#ffffff"});
     debugText.fixedToCamera = true;
     debugText.stroke = '#000000';
     debugText.strokeThickness = 2;
@@ -158,88 +207,98 @@ function addText()
     
     
     var instructionText = new Phaser.Text(game, 0, 0,
-    "Instructions: \nUse Arrows keys to move around \nUse mouse to shoot \nShift to run", { font:"16 Arial", fill:"#ffffff;"});
+    "Instructions: \nUse Arrows keys to move around \nUse mouse to shoot \nShift to run", { font:"16 Arial", fill:"#FFFFFF"});
     instructionText.fixedToCamera = true;
     instructionText.stroke = '#000000';
     instructionText.strokeThickness = 2;
     instructionText.cameraOffset.setTo(10, 20);
     
     
-    var staminaBarText = new Phaser.Text(game, 0, 0, "Stamina", { font:"12 Arial", fill:"#ffffff;", align: "center"});
+    var staminaBarText = new Phaser.Text(game, 0, 0, "Stamina", { font:"12 Arial", fill:"#FFFFFF", align: "center"});
     staminaBarText.fixedToCamera = true;
     staminaBarText.stroke = '#000000';
     staminaBarText.strokeThickness = 2;
-    staminaBarText.cameraOffset.setTo(0, 220);
+    staminaBarText.cameraOffset.setTo(400, 550);
     textGroup.add(staminaBarText);
+    
+    var healthBarText = new Phaser.Text(game, 0, 0, "Health", { font:"12 Arial", fill:"#FFFFFF", align: "center"});
+    healthBarText.fixedToCamera = true;
+    healthBarText.stroke = '#000000';
+    healthBarText.strokeThickness = 2;
+    healthBarText.cameraOffset.setTo(100, 550);
+    textGroup.add(healthBarText);
     
     textGroup.add(instructionText);
     textGroup.add(debugText);
 }
 
 function update() {
-    // game.physics.arcade.collide(player);
-    game.debug.geom(healthBar,'#ff0000');
-    game.debug.geom(staminaBar,'#8FD8D8');
+   
+        game.physics.arcade.overlap(enemyBullets, player, bulletHitPlayer, null, this);
+        
+        player.body.velocity.x = 0;
+        player.body.velocity.y = 0;
+        
+        
+        enemiesAlive = 0;
     
-    game.physics.arcade.overlap(enemyBullets, player, bulletHitPlayer, null, this);
+     
     
-    player.body.velocity.x = 0;
-    player.body.velocity.y = 0;
-    
-    
-    enemiesAlive = 0;
-
- 
-
-    if(gameOver == false)
-    {
-        for (var i = 0; i < enemies.length; i++)
+        if(gameOver == false)
         {
-            if (enemies[i].alive)
+            for (var i = 0; i < enemies.length; i++)
             {
-                enemiesAlive++;
-                game.physics.arcade.collide(player, enemies[i].enemy);
-                game.physics.arcade.overlap(bullets, enemies[i].enemy, bulletHitEnemy, null, this);
-                enemies[i].update();
-            }else
+                if (enemies[i].alive)
+                {
+                    enemiesAlive++;
+                    game.physics.arcade.collide(player, enemies[i].enemy);
+                    game.physics.arcade.overlap(bullets, enemies[i].enemy, bulletHitEnemy, null, this);
+                    enemies[i].update();
+                }else
+                {
+                    game.physics.arcade.overlap(player, enemies[i].coinSprite, playerCollectCoin, null, this);
+                }
+            }
+            if(enemiesAlive == 0)
             {
-                game.physics.arcade.overlap(player, enemies[i].coinSprite, playerCollectCoin, null, this);
+                
+                gameWon();
+            }
+            
+            for (var i = 0; i < healthPotions.length; i++)
+            {
+                // console.log(healthPotions[i])
+                game.physics.arcade.overlap(player, healthPotions[i], addHealth, null, this);
+            }
+        
+        
+            playerMovement();
+        
+            
+            if (game.input.activePointer.isDown)
+            {
+                fire();
+            }
+            
+            
+            hud.bringToTop();
+            displayPlayerHeath();
+            displayStaminaBar();
+        
+        }else
+        {
+            player.kill();
+            for (var i = 0; i < enemies.length; i++)
+            {
+                if (enemies[i].alive)
+                {
+                    enemies[i].enemy.kill();
+                    enemies[i].turret.kill();
+                    enemies[i].enemyHealthBar.kill();
+                }
             }
         }
-        if(enemiesAlive == 0)
-        {
-            gameWon();
-        }
-        
-        for (var i = 0; i < healthPotions.length; i++)
-        {
-            // console.log(healthPotions[i])
-            game.physics.arcade.overlap(player, healthPotions[i], addHealth, null, this);
-        }
     
-    
-        playerMovement();
-    
-        
-        if (game.input.activePointer.isDown)
-        {
-            fire();
-        }
-        
-        displayPlayerHeath();
-        displayStaminaBar();
-    }else
-    {
-        player.kill();
-        for (var i = 0; i < enemies.length; i++)
-        {
-            if (enemies[i].alive)
-            {
-                enemies[i].enemy.kill();
-                enemies[i].turret.kill();
-            }
-        }
-    }
     //Debug text
     displayDebug();
 }
@@ -285,7 +344,7 @@ function gameWon()
     //	false means don't explode all the sprites at once, but instead release at a rate of 20 particles per frame
     //	The 5000 value is the lifespan of each particle
     emitter.start(false, 5000, 20);
-    var wonText = new Phaser.Text(game, 0, 0, "CONGRATULATIONS!\nYOU WON!", { font:"65 Arial", fill:"#ffffff;", align: "center"});
+    var wonText = new Phaser.Text(game, 0, 0, "CONGRATULATIONS!\nYOU WON!", { font:"65 Arial", fill:"#ffffff", align: "center"});
     wonText.fixedToCamera = true;
     wonText.stroke = '#000000';
     wonText.strokeThickness = 2;
@@ -373,12 +432,16 @@ function decreaseStamina()
 }
 function displayStaminaBar()
 {
-    this.staminaBar.y = game.camera.y + 400;
-    this.staminaBar.x = game.camera.x + 20;
-    this.staminaBar.height = -this.stamina;
+    staminaBar.bringToTop();
+    if( this.staminaBar.width != this.stamina)
+    {
+        this.staminaBar.width = this.stamina*1.5;
+    }
 }
 function render()
 {
+    // game.debug.geom(staminaBar,'#ff0000');
+    // geomHealth.fixedToCamera = true;
 }
 function makeCharacterRun()
 {
@@ -398,7 +461,8 @@ function bulletHitPlayer (tank, bullet) {
     health -= 2;
     if(health <= 0)
     {
-        var gameOverText = new Phaser.Text(game, 0, 0, "GAME OVER", { font:"65 Arial", fill:"#ffffff;"});
+        healthBar.width = 0;
+        var gameOverText = new Phaser.Text(game, 0, 0, "GAME OVER", { font:"65 Arial", fill:"#ffffff"});
         gameOverText.fixedToCamera = true;
         gameOverText.stroke = '#000000';
         gameOverText.strokeThickness = 2;
@@ -409,25 +473,27 @@ function bulletHitPlayer (tank, bullet) {
 }
 function displayPlayerHeath()
 {
-    this.healthBar.x = this.player.x;
-    this.healthBar.y = this.player.y - 10;
+    healthBar.bringToTop();
     if( this.healthBar.width != this.health)
     {
-        this.healthBar.width = this.health;
+        this.healthBar.width = this.health*4;
     }
 }
 function bulletHitEnemy (enemy, bullet) {
 
     bullet.kill();
-    var destroyed = enemies[enemy.name].damage();
-    if (destroyed)
+    if(bullet.inCamera == true)
     {
-        var explosionAnimation = explosions.getFirstExists(false);
-        explosionAnimation.reset(enemy.x, enemy.y);
-        explosionAnimation.play('kaboom', 30, false, true);
-        
+        score++;
+        var destroyed = enemies[enemy.name].damage();
+        if (destroyed)
+        {
+            var explosionAnimation = explosions.getFirstExists(false);
+            explosionAnimation.reset(enemy.x, enemy.y);
+            explosionAnimation.play('kaboom', 30, false, true);
+            
+        }
     }
-
 }
 function fire () {
 
@@ -435,11 +501,12 @@ function fire () {
     {
         nextFire = game.time.now + fireRate;
 
-        var bullet = bullets.getFirstExists(false);
+        var bullet = bullets.getFirstDead();
 
         bullet.reset(player.x, player.y);
-
-        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 1000, game.input.activePointer, 500);
+    
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 1000, game.input.activePointer, 0);
+        
     }
 
 }
@@ -454,7 +521,7 @@ Enemy = function (index, game, player, bullets, turret) {
     // var y = game.world.centerY;
 
     this.game = game;
-    this.health = 30;
+    this.health = (Math.random()*40)+30; //Setting random health between 30-70
     this.player = player;
     this.bullets = bullets;
     this.fireRate = 3000;
@@ -481,8 +548,8 @@ Enemy = function (index, game, player, bullets, turret) {
     game.physics.arcade.velocityFromRotation(this.enemy.rotation, 100, this.enemy.body.velocity);
     this.coinSprite;
 
-    this.enemyHealthBar = new Phaser.Rectangle(this.enemy.x - this.health/2, this.enemy.y - 50, this.health, 7);
-    // this.enemyHealthBar.anchor.set(0.5);
+    this.enemyHealthBar = game.add.sprite(x,y,'health');
+    this.enemyHealthBar.anchor.set(.5,5);
 };
 
 Enemy.prototype.damage = function() {
@@ -490,7 +557,7 @@ Enemy.prototype.damage = function() {
     this.health -= 10;
 
     this.enemyHealthBar.width = this.health;
-    if (this.health <= 0)
+    if (this.health <= 1)
     {
         this.alive = false;
         //1 out of 4 chance that you will get a key
@@ -499,13 +566,12 @@ Enemy.prototype.damage = function() {
         {
             this.coinSprite = game.add.sprite(this.enemy.x, this.enemy.y, 'coinSprite');
             game.physics.enable(this.coinSprite, Phaser.Physics.ARCADE);
-        
         }
         
         // this.shadow.kill();
         this.enemy.kill();
         this.turret.kill();
-        
+        this.enemyHealthBar.kill();
 
         return true;
     }
@@ -523,6 +589,9 @@ Enemy.prototype.update = function() {
 
     this.turret.x = this.enemy.x;
     this.turret.y = this.enemy.y;
+    this.enemyHealthBar.y = this.enemy.y;
+    this.enemyHealthBar.x = this.enemy.x;
+    this.enemyHealthBar.width = this.health/2;
     this.turret.rotation = this.game.physics.arcade.angleBetween(this.enemy, this.player);
 
     if (this.game.physics.arcade.distanceBetween(this.enemy, this.player) < 400)
