@@ -1,16 +1,14 @@
 
 /*Bugs
+    Coins are on top of explosison
+    If player bumps into tanks they stop moving due to the way they accelerate
+    If player shoots while really close to tank it won't take
 */
 
 /*
-TODO
+IDEAS
     UFO to drive around in, potentially removing shooting from alien in favor of getting to the ufo on the map and then shooting
     Add splashscreen/loading/etc whatever have you
-    Add poewrups
-        Invincibility
-        Rapid Fire
-        (If remove shooting) Gun
-        Laser that continuesly damages enemies
     Add more enemies
         Soliders
         Planes
@@ -27,7 +25,7 @@ TODO
 */
 
 //Globals
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', {
+var game = new Phaser.Game(800, 600, Phaser.WEBGL, 'phaser-example', {
     preload: preload,
     create: create,
     update: update,
@@ -35,9 +33,6 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', {
 });
 var player;
 var jumpTimer = 0;
-
-var map;
-var layer;
 var shiftKey;
 var maxStamina = 150;
 var stamina = maxStamina;
@@ -46,7 +41,6 @@ var runSpeed = 200;
 var walkSpeed= 100;
 var characterSpeed = walkSpeed;
 var facing = '';
-
 var enemies;
 var enemyBullets;
 var enemiesTotal = 0;
@@ -64,10 +58,24 @@ var coinSprite;
 var gameOver = false;
 var healthPotions;
 var pause = false;
+var shieldWidth;
+var shieldHeight;
+var isTitleScreenShowing;
+var textGroup;
+var debugText;
+var hud;
+var bg;
+var layer;
+var map;
+var surroundShield;
+ var TitleText ;
+ var background;
+ var filter;
 function preload() {
 
-    // game.load.tilemap('mario', 'assets/world.json', null, Phaser.Tilemap.TILED_JSON);
-    // game.load.image('tiles', 'assets/pics/super_mario.png');
+    // game.load.tilemap('World', 'assets/dumbmap.json', null, Phaser.Tilemap.TILED_JSON);
+
+    // game.load.image('tiles', 'assets/3863.png');
 
     // game.load.image('player', 'assets/pics/ball.png');
     game.load.atlas('enemy', 'assets/pics/tanks.png', 'assets/pics/tanks.json');
@@ -75,12 +83,17 @@ function preload() {
     game.load.image('bullet', 'assets/pics/bullet.png');
     game.load.image('turret', 'assets/pics/bullet.png');
     game.load.image('floor', 'assets/pics/floor.png');
-    game.load.image('coinSprite', 'assets/pics/coinSprite.gif');
     game.load.image('healthSprite', 'assets/pics/healthPotion.gif');
     game.load.spritesheet('kaboom', 'assets/pics/explosion.png', 64, 64, 23);
+    game.load.script('filter', 'assets/phaser/filters/Fire.js');
+
+    //Powerups
+    game.load.image('coinSprite', 'assets/pics/coinSprite.gif');
+    game.load.image('surroundShield', 'assets/pics/surroundShield.png');
+    game.load.image('shield', 'assets/pics/shield.png');
+    game.load.image('bluepotion', 'assets/pics/bluepotion.png');
     
-    
-        game.load.spritesheet('button', 'assets/pics/button.png', 193, 71);
+    game.load.image('button', 'assets/pics/button.png');
 
     //HUD
     game.load.image('health', 'assets/pics/Health.png');
@@ -88,20 +101,72 @@ function preload() {
     game.load.image('stamina', 'assets/pics/stamina.png');
 }
 
-var textGroup;
-var debugText;
-var hud;
 function create() {
-    // game.stage.backgroundColor = '#000000';
-
-    
-    game.add.tileSprite(0, 0, 2000, 2000, 'floor');
-    game.world.setBounds(0, 0, 1400, 1400);
-
+    //Map that will eventually get added :)
+    // map = game.add.tilemap('World');
+    // map.addTilesetImage('JSONMap', 'tiles');
+    // // map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
+    // layer = map.createLayer('World1');
+    // layer.resizeWorld();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    player = game.add.sprite(25, 0, 'player');
+    textGroup = game.add.group();
+    
+    titleScreen();
+}
+
+function titleScreen()
+{
+	background = game.add.sprite(0, 0);
+	background.width = 800;
+	background.height = 600;
+
+	filter = game.add.filter('Fire', 800, 600);
+	filter.alpha = 0.0;
+
+	background.filters = [filter];
+	
+    isTitleScreenShowing = true;
+    TitleText = new Phaser.Text(game, 0, 0, "CORY'S GAME", { font:"72px Arial", fill:"#FFFFFF", align: "center"});
+    TitleText.fixedToCamera = true;
+    TitleText.stroke = '#000000';
+    TitleText.strokeThickness = 2;
+    TitleText.cameraOffset.setTo(175, 100);
+    textGroup.add(TitleText);
+    
+    //Instruction Text
+    instructionText();
+    button = game.add.button(325, 500, 'button', removeTitleScreen, this, 0, 0, 0);
+
+}
+function removeTitleScreen()
+{
+    background.kill();
+
+    isTitleScreenShowing = false;
+    TitleText.destroy();
+    // button.kill();
+    instructionText.destroy();
+    createLevel();
+}
+var instructionText;
+function instructionText()
+{
+     instructionText = new Phaser.Text(game, 0, 0,
+    "Instructions\n Destroy the tanks, collect power-ups, and score as you go along\n\nControls: \nUse Arrows keys or WASD to move around \nUse left mouse button to shoot \nHold shift to run", { font:"16px Arial", fill:"#FFFFFF", align:"center"});
+    instructionText.fixedToCamera = true;
+    instructionText.stroke = '#000000';
+    instructionText.strokeThickness = 2;
+    instructionText.cameraOffset.setTo(200, 300);
+    textGroup.add(instructionText);
+}
+function createLevel()
+{
+    game.add.tileSprite(0, 0, 2000, 2000, 'floor');
+    game.world.setBounds(0, 0, 1400, 1400);
+    // game.world.setBounds(0, 0, 800, 600);
+    
     healthBar = game.add.sprite(0, 0, 'health');
     healthBar.fixedToCamera = true;
     healthBar.cameraOffset.setTo(100,580);
@@ -115,19 +180,16 @@ function create() {
     hud.cameraOffset.setTo(75,570);
     hud.width = 600;
     
+    
+    player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
     player.checkWorldBounds = true;
     game.physics.enable(player, Phaser.Physics.ARCADE);
+    player.body.collideWorldBounds = true;
+    
     game.camera.follow(player);
 
-    player.body.collideWorldBounds = true;
-
-    // player.body.velocity.x=76;
-    // player.body.velocity.y=95;
-
-    // player.body.bounce.set(1);
-    // player.body.gravity.y = 350;
+      //KEYBOARD
     cursors = game.input.keyboard.createCursorKeys();
-
     shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
     shiftKey.onDown.add(makeCharacterRun, this);
     shiftKey.onUp.add(makeCharacterWalk, this);
@@ -136,8 +198,10 @@ function create() {
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('turn', [4], 20, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+
     
-    
+    //HEALTH POTIONS
     healthPotions = [];
     for (var i = 0; i < 5; i++)
     {
@@ -146,8 +210,8 @@ function create() {
         game.physics.enable(healthPotions[i], Phaser.Physics.ARCADE);
     }
     
-    //Create enemies
-    
+
+    //BULLETS
     enemyBullets = game.add.group();
     enemyBullets.enableBody = true;
     enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -168,19 +232,18 @@ function create() {
     bullets.setAll('checkWorldBounds', true);
     bullets.setAll('outOfBoundsKill', true);
     
-
-    //  Create some baddies to waste :)
+       
+    //ENEMIES
     enemies = [];
 
-    enemiesTotal = 20;
-    enemiesAlive = 20;
-
+    enemiesTotal = 2;
+    enemiesAlive = enemiesTotal;
     for (var i = 0; i < enemiesTotal; i++)
     {
         enemies.push(new Enemy(i, game, player, enemyBullets, turret));
     }
 
-     //  Explosion pool
+    //EXPLOSIONS
     explosions = game.add.group();
 
     for (var i = 0; i < 10; i++)
@@ -189,53 +252,52 @@ function create() {
         explosionAnimation.anchor.setTo(0.5, 0.5);
         explosionAnimation.animations.add('kaboom');
     }
-
-
-    
-
     addText();
 }
+  var staminaBarText;
+      var healthBarText ;
 function addText()
 {
-        //Text
     textGroup = game.add.group();
-    debugText = new Phaser.Text(game, 0, 0, "Text", { font:"16 Arial", fill:"#ffffff"});
+    
+    //Adds text to main level
+    debugText = new Phaser.Text(game, 0, 0, "Text", { font:"16px Arial", fill:"#ffffff"});
     debugText.fixedToCamera = true;
     debugText.stroke = '#000000';
     debugText.strokeThickness = 2;
     debugText.cameraOffset.setTo(650,20);
+    textGroup.add(debugText);
     
     
-    var instructionText = new Phaser.Text(game, 0, 0,
-    "Instructions: \nUse Arrows keys to move around \nUse mouse to shoot \nShift to run", { font:"16 Arial", fill:"#FFFFFF"});
-    instructionText.fixedToCamera = true;
-    instructionText.stroke = '#000000';
-    instructionText.strokeThickness = 2;
-    instructionText.cameraOffset.setTo(10, 20);
-    
-    
-    var staminaBarText = new Phaser.Text(game, 0, 0, "Stamina", { font:"12 Arial", fill:"#FFFFFF", align: "center"});
+     staminaBarText = new Phaser.Text(game, 0, 0, "Stamina", { font:"12px Arial", fill:"#FFFFFF", align: "center"});
     staminaBarText.fixedToCamera = true;
     staminaBarText.stroke = '#000000';
     staminaBarText.strokeThickness = 2;
     staminaBarText.cameraOffset.setTo(400, 550);
     textGroup.add(staminaBarText);
     
-    var healthBarText = new Phaser.Text(game, 0, 0, "Health", { font:"12 Arial", fill:"#FFFFFF", align: "center"});
+     healthBarText = new Phaser.Text(game, 0, 0, "Health", { font:"12px Arial", fill:"#FFFFFF", align: "center"});
     healthBarText.fixedToCamera = true;
     healthBarText.stroke = '#000000';
     healthBarText.strokeThickness = 2;
     healthBarText.cameraOffset.setTo(100, 550);
     textGroup.add(healthBarText);
-    
-    textGroup.add(instructionText);
-    textGroup.add(debugText);
 }
 
+
 function update() {
-   
-        game.physics.arcade.overlap(enemyBullets, player, bulletHitPlayer, null, this);
-        
+    if(isTitleScreenShowing == true)
+    {
+        filter.update();
+    }else
+    {
+        if(surroundShield !== undefined && surroundShield.exists == true)
+        {
+            game.physics.arcade.overlap(enemyBullets, surroundShield, bulletHitShield, null, this);
+        }else
+        {
+            game.physics.arcade.overlap(enemyBullets, player, bulletHitPlayer, null, this);
+        }
         player.body.velocity.x = 0;
         player.body.velocity.y = 0;
         
@@ -243,7 +305,6 @@ function update() {
         enemiesAlive = 0;
     
      
-    
         if(gameOver == false)
         {
             for (var i = 0; i < enemies.length; i++)
@@ -252,11 +313,12 @@ function update() {
                 {
                     enemiesAlive++;
                     game.physics.arcade.collide(player, enemies[i].enemy);
+                    
                     game.physics.arcade.overlap(bullets, enemies[i].enemy, bulletHitEnemy, null, this);
                     enemies[i].update();
                 }else
                 {
-                    game.physics.arcade.overlap(player, enemies[i].coinSprite, playerCollectCoin, null, this);
+                    game.physics.arcade.overlap(player, enemies[i].coinSprite.sprite, playerCollectCoin, null, this);
                 }
             }
             if(enemiesAlive == 0)
@@ -280,6 +342,19 @@ function update() {
                 fire();
             }
             
+            //POWERUPS
+            if(surroundShield !== undefined)
+            {
+                surroundShield.x = player.x -(surroundShield.width -player.width)/2;
+                surroundShield.y = player.y - (surroundShield.height-player.height)/2.5; //Magic? Maybe
+            }
+            if(superSpeedTime !== "" && superSpeedTime < game.time.now)
+            {
+                setCharacterSpeed(characterSpeed/2);
+                runSpeed /= 2;
+                walkSpeed /= 2;
+                superSpeedTime = "";
+            }
             
             hud.bringToTop();
             displayPlayerHeath();
@@ -295,12 +370,24 @@ function update() {
                     enemies[i].enemy.kill();
                     enemies[i].turret.kill();
                     enemies[i].enemyHealthBar.kill();
+                }else
+                {
+                    enemies[i].coinSprite.sprite.kill();
                 }
             }
+            for (var i = 0; i < healthPotions.length; i++)
+            {
+                healthPotions[i].kill();
+            }
+        
+        
+            if(surroundShield !== undefined)
+                surroundShield.kill();
         }
     
-    //Debug text
-    displayDebug();
+        //Debug text
+        displayDebug();
+    }
 }
 function addHealth(player, healthPotion)
 {
@@ -314,10 +401,53 @@ function addHealth(player, healthPotion)
     }
 }
 var score =0;
-function playerCollectCoin(player, coin)
+function playerCollectCoin(player, powerup)
 {
-    coin.kill();
-    score ++;
+    
+    powerup.kill();
+    if(powerup.name == "coin")
+    {
+        score ++;
+    }else if(powerup.name == "shield" )
+    {
+        if(surroundShield === undefined || surroundShield.exists === false)
+        {
+            surroundShield = game.add.sprite(player.x,player.y,'surroundShield');
+            shieldWidth = surroundShield.width;
+            shieldHeight = surroundShield.height;
+            surroundShield.health = 3;
+            surroundShield.alpha = .3;
+            game.physics.enable(surroundShield, Phaser.Physics.ARCADE);
+        }else //Regenerates shield helath
+        {
+            surroundShield.health = 3;
+            surroundShield.width = shieldWidth;
+            surroundShield.height = shieldHeight;
+        }
+    }
+    else if(powerup.name == "superspeed" )
+    {
+        
+        if(characterSpeed == walkSpeed)
+            setCharacterSpeed(200);
+        else
+            setCharacterSpeed(400);
+        runSpeed = 400;
+        walkSpeed = 200;
+        superSpeedTime = game.time.now + 5000;
+    }
+}
+var superSpeedTime;
+function bulletHitShield(enemy, bullet)
+{
+    bullet.kill();
+    surroundShield.health--;
+    surroundShield.width -= surroundShield.width*.25;
+    surroundShield.height -= surroundShield.height*.25;
+    if(surroundShield.health <= 0)
+    {
+        surroundShield.kill();
+    }
 }
 function displayDebug()
 {
@@ -344,15 +474,13 @@ function gameWon()
     //	false means don't explode all the sprites at once, but instead release at a rate of 20 particles per frame
     //	The 5000 value is the lifespan of each particle
     emitter.start(false, 5000, 20);
-    var wonText = new Phaser.Text(game, 0, 0, "CONGRATULATIONS!\nYOU WON!", { font:"65 Arial", fill:"#ffffff", align: "center"});
+    var wonText = new Phaser.Text(game, 0, 0, "Winner!\n Final Score: " + score, { font:"65px Arial", fill:"#ffffff", align: "center"});
     wonText.fixedToCamera = true;
     wonText.stroke = '#000000';
     wonText.strokeThickness = 2;
-    wonText.cameraOffset.setTo(50, 220);
+    wonText.cameraOffset.setTo(175, 220);
     textGroup.add(wonText);
     gameOver = true;
-    
-
 }
 function playerMovement()
 {
@@ -446,13 +574,13 @@ function render()
 function makeCharacterRun()
 {
     if(stamina > 0)
-        updateCharacterSpeed(runSpeed);
+        setCharacterSpeed(runSpeed);
 }
 function makeCharacterWalk()
 {
-    updateCharacterSpeed(walkSpeed);
+    setCharacterSpeed(walkSpeed);
 }
-function updateCharacterSpeed(newSpeed) {
+function setCharacterSpeed(newSpeed) {
     characterSpeed = newSpeed;
 }
 function bulletHitPlayer (tank, bullet) {
@@ -462,7 +590,7 @@ function bulletHitPlayer (tank, bullet) {
     if(health <= 0)
     {
         healthBar.width = 0;
-        var gameOverText = new Phaser.Text(game, 0, 0, "GAME OVER", { font:"65 Arial", fill:"#ffffff"});
+        var gameOverText = new Phaser.Text(game, 0, 0, "GAME OVER\n Score: "+ score , { font:"65px Arial", fill:"#ffffff"});
         gameOverText.fixedToCamera = true;
         gameOverText.stroke = '#000000';
         gameOverText.strokeThickness = 2;
@@ -550,6 +678,7 @@ Enemy = function (index, game, player, bullets, turret) {
 
     this.enemyHealthBar = game.add.sprite(x,y,'health');
     this.enemyHealthBar.anchor.set(.5,5);
+
 };
 
 Enemy.prototype.damage = function() {
@@ -564,8 +693,7 @@ Enemy.prototype.damage = function() {
         // if(Math.floor((Math.random()*4)+1) == 1 )
         if(true)
         {
-            this.coinSprite = game.add.sprite(this.enemy.x, this.enemy.y, 'coinSprite');
-            game.physics.enable(this.coinSprite, Phaser.Physics.ARCADE);
+            this.coinSprite = new Powerup(game, this.enemy.x, this.enemy.y);
         }
         
         // this.shadow.kill();
@@ -585,7 +713,6 @@ Enemy.prototype.update = function() {
     // this.shadow.x = this.tank.x;
     // this.shadow.y = this.tank.y;
     // this.shadow.rotation = this.tank.rotation;
-    // game.debug.geom(this.enemyHealthBar,'#ff0000');
 
     this.turret.x = this.enemy.x;
     this.turret.y = this.enemy.y;
@@ -608,14 +735,25 @@ Enemy.prototype.update = function() {
             bullet.rotation = this.game.physics.arcade.moveToObject(bullet, this.player, 500);
         }
     }
-    
-    // this.enemyHealthBar.x = this.enemy.x - this.health/2;
-    // this.enemyHealthBar.y = this.enemy.y - 50;
-
 };
 
-/*
-Better Weapons
 
-
-*/
+Powerup = function (game, x,y) {
+    this.game = game;
+    var OneAndFour= Math.floor((Math.random()*4)+1);
+    if(OneAndFour== 1 )
+    {
+        this.sprite = game.add.sprite(x, y, 'shield');
+        this.sprite.name = "shield";
+    }else if(OneAndFour== 2 )
+    {
+        this.sprite = game.add.sprite(x, y, 'bluepotion');
+        this.sprite.name = "superspeed";
+    }
+    else
+    {
+        this.sprite = game.add.sprite(x, y, 'coinSprite');
+        this.sprite.name = "coin";
+    }
+    game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+};
