@@ -148,7 +148,6 @@ function removeTitleScreen()
 
     isTitleScreenShowing = false;
     TitleText.destroy();
-    // button.kill();
     instructionText.destroy();
     createLevel();
 }
@@ -245,7 +244,7 @@ function createLevel()
     //ENEMIES
     enemies = [];
 
-    enemiesTotal = 2;
+    enemiesTotal = 25;
     enemiesAlive = enemiesTotal;
     for (var i = 0; i < enemiesTotal; i++)
     {
