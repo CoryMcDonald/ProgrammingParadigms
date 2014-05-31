@@ -8,19 +8,19 @@ var game = new Phaser.Game(800, 600, Phaser.WEBGL, 'game',
     preload: preload,
     create: create,
     update: update
-});
-
+})
 
 function preload()
 {
     //Player
     game.load.image('player', 'assets/pics/player.gif');
-    game.load.image('sword', 'assets/pics/sword.png');
+    game.load.image('001', 'assets/pics/sword.png');
     
     
     //GUI
     game.load.image('button', 'assets/pics/button.gif');
     game.load.image('playerEquipedSprite', 'assets/pics/playerEquipedSprite.gif');
+    game.load.image('healthBar', 'assets/pics/healthBar.png');
     
     //Backgrounds
     game.load.image('bg', 'assets/pics/bg.jpg');
@@ -37,6 +37,8 @@ function create()
     cursors = game.input.keyboard.createCursorKeys();
     createWorld();
     createButtons();
+    createInventoryMapping();
+    readInventory();
     initalizeCharacters();
 }
 function createWorld()
@@ -45,7 +47,7 @@ function createWorld()
     game.stage.backgroundColor = '#60A859';
     game.physics.startSystem(Phaser.Physics.ARCADE);
     // createNPCs();
-    createEnemies();
+    // createEnemies();
 }
 function createNPCs()
 {
@@ -69,13 +71,14 @@ var Enemies;
 function createEnemies()
 {
     Enemies = game.add.group();
-    for(var i =0 ; i<1; i++)
+    for(var i =0 ; i<2; i++)
     {
         var originX = game.rnd.integerInRange(50,550);
         var originY = game.rnd.integerInRange(50, 550);
+        
         var patrolDistance = game.rnd.integerInRange(200, 350);
         var currentEnemy = Enemies.create(originX,originY, 'Enemy1');
-        currentEnemy.health = 100;
+
         currentEnemy.speed = game.rnd.integerInRange(75, 125);
         
         currentEnemy.originX = originX;
@@ -83,6 +86,14 @@ function createEnemies()
         
         currentEnemy.sword = game.add.sprite(originX, originY, 'sword');
         currentEnemy.sword.width = 32;
+        currentEnemy.sword.swingTime = 0;
+        currentEnemy.sword.hold = 50;
+        
+        //Display health
+        currentEnemy.healthBar = game.add.sprite(originX, originY-20, 'healthBar');
+        currentEnemy.healthBar.width = currentEnemy.width;
+        currentEnemy.maxHealth = 50;
+        currentEnemy.health = currentEnemy.maxHealth;
         
         //Patrol logic
         currentEnemy.moving = '';
@@ -105,8 +116,8 @@ function createEnemies()
         }
         else
         {
-            if(currentEnemy.originX+patrolDistance > game.world.bounds.width)
-                currentEnemy.maxPatrol = game.world.bounds.width;
+            if(currentEnemy.originX+patrolDistance > game.world.bounds.width-currentEnemy.width){
+                currentEnemy.maxPatrol = game.world.bounds.width-1; console.log('out of bounds')}
             else
                 currentEnemy.maxPatrol = currentEnemy.originX+patrolDistance;
         }
@@ -114,6 +125,9 @@ function createEnemies()
         currentEnemy.followingPlayer = false;
         
         game.physics.enable(currentEnemy, Phaser.Physics.ARCADE);
+        game.physics.enable(currentEnemy.sword, Phaser.Physics.ARCADE);
+
+
         // currentEnemy.body.collideWorldBounds = true;
     }
     Enemies.setAll('body.collideWorldBounds', true);
@@ -172,13 +186,15 @@ function UpdateEnemies()
     {
         game.physics.arcade.collide(Enemies);
         game.physics.arcade.collide(Player.sprite, Enemies, collision, null, this);
-        game.physics.arcade.overlap(Player.sword, Enemies, bulletHitEnemy, null, this);
+        game.physics.arcade.overlap(Player.sword, Enemies, playerHitEnemy, null, this);
         
 
         Enemies.forEach(function(item)
         {
             var distanceFromPlayer = game.physics.arcade.distanceBetween(item, Player.sprite);
             var distanceFromOrigin = game.physics.arcade.distanceToXY(item, item.originX, item.originY);
+            
+            game.physics.arcade.overlap(item.sword, Player.sprite, enemyHitPlayer, null, this);
             
             item.body.velocity.x = 0;
             item.body.velocity.y = 0;
@@ -189,28 +205,83 @@ function UpdateEnemies()
             item.sword.rotation = 0;
             if(item.facing == 'right')
             {
-                
-            }else
+                item.sword.x = item.x + item.width;
+                item.sword.width = 32;
+            }else if(item.facing == 'left')
             {
-                
+                item.sword.width = -32;
+            }else if(item.facing == 'up')
+            {
+                item.sword.x = item.x-5;
+                item.sword.y = item.y-15;
+                item.sword.width = 32;
+                item.sword.rotation = -.79;
             }
+            else if(item.facing == 'down')
+            {
+                item.sword.x = item.x-5;
+                item.sword.y = item.y+65;
+                item.sword.width = -32;
+                item.sword.rotation = 3.91;
+            }
+        
+            
+            //Healthbar
+            item.healthBar.x = item.x;
+            item.healthBar.y = item.y-20;
             
             if(distanceFromPlayer < 200)
             {
                 item.followingPlayer = true;
-                if(distanceFromPlayer > 100)
+                if(distanceFromPlayer > 65 && (item.facing == 'left' || item.facing == 'right'))
                 {
                     game.physics.arcade.moveToObject(item, Player.sprite, item.speed);
+                }
+                else if(distanceFromPlayer > 80 && (item.facing =='up' || item.facing == 'down'))
+                {
+                    game.physics.arcade.moveToObject(item, Player.sprite, item.speed);
+                }
+                                    
+                // swinging stuff
+                if(game.time.now > item.sword.swingTime || item.sword.hold > 0)
+                {
+                    item.sword.swingTime = game.time.now + 500;
+                    item.sword.hold --;
+                    if(item.sword.hold < 0)
+                    {
+                        item.sword.hold  = 50;
+                    }
+                    if(item.facing == 'right')
+                    {
+                        item.sword.rotation = .75;
+                        item.sword.x = item.sword.x+20;
+                    }
+                    else if(item.facing == 'left')
+                    {
+                        item.sword.x = item.sword.x-20;
+                        item.sword.rotation = -.75;
+                    }
+                }
+                xDifference = Player.sprite.x - item.x;
+                yDifference = Player.sprite.y - item.y;
+                globalItem = item; //todo take this out
+                if(Math.abs(xDifference) > Math.abs(yDifference)) //the player is more towards the left or right than the bottom or up
+                {
+                    if(Player.sprite.x < item.x)
+                    {
+                        item.facing = 'left'
+                    }else if(Player.sprite.x > item.x)
+                    {
+                        item.facing = 'right'
+                    }
                 }else
                 {
-                     if(item.moving == 'right'){
-                        item.sword.rotation = .75;
-                        item.sword.x = item.sword.x + 25;
-                    }
-                    else
+                    if(Player.sprite.y < item.y)
                     {
-                        item.sword.rotation -= .75;
-                        item.sword.x = item.sword.x - 25;
+                        item.facing = 'up'
+                    }else if(Player.sprite.y > item.y)
+                    {
+                        item.facing = 'down'
                     }
                 }
             }
@@ -224,22 +295,30 @@ function UpdateEnemies()
                     item.followingPlayer = false;
                     item.moveToOrigin = false;
                 }
+                
+                  if(item.body.velocity.x < 0)
+                        item.facing = 'left';
+                    else if( item.body.velocity.x > 0)
+                        item.facing = 'right';
+                    else if(item.body.velocity.y > 0)
+                        item.facing = 'down'
+                    else if(item.body.velocity.y < 0)
+                        item.facing = 'up';
+                    else
+                        item.faing = 'stationary';
             }
             else if(item.followingPlayer == false)
             {
                 //Patrol speed is 75% of normal speed
-                if(item.moving == 'left') {
+                if(item.moving == 'left')
                     item.body.velocity.x = -item.speed*.75;
-                    item.sword.width = -32;
-                } else if(item.moving == 'right') {
+                else if(item.moving == 'right')
                     item.body.velocity.x = item.speed*.75;
-                    item.sword.x = item.x + item.width;
-                    item.sword.width = 32;
-                }else if(item.moving == 'up'){
+                else if(item.moving == 'up')
                     item.body.velocity.y = -item.speed*.75;
-                }else if(item.moving == 'down'){
+                else if(item.moving == 'down')
                     item.body.velocity.y = item.speed*.75;
-                }
+                
                 
                 if(item.patrolDown == 1)
                 {
@@ -261,35 +340,54 @@ function UpdateEnemies()
                     }else if(item.x < item.originX)
                         game.physics.arcade.moveToXY(item, item.originX, item.originY, item.speed);
                 }
-                
-                
-                if(item.body.velocity.x < 0)
-                    item.facing = 'left';
-                else if( item.body.velocity.x > 0)
-                    item.facing = 'right';
-                else
-                    item.faing = 'stationary';
-                
+        
+                  if(item.body.velocity.x < 0)
+                        item.facing = 'left';
+                    else if( item.body.velocity.x > 0)
+                        item.facing = 'right';
+                    else if(item.body.velocity.y > 0)
+                        item.facing = 'down'
+                    else if(item.body.velocity.y < 0)
+                        item.facing = 'up';
+                    else
+                        item.faing = 'stationary';
             }
+
+            
         });
     }
 
 }
 //todo figure out polymorphism in Javasript
-function bulletHitEnemy (player, enemy) {
+function playerHitEnemy (player, enemy) {
     if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
     {
-        if(enemy.health < 0)
+        if(enemy.health <= 0)
         {
             enemy.sword.kill();
             enemy.kill();
+            enemy.healthBar.kill();
         }else{
             enemy.health --;
-            console.log('DIE')
+            enemy.healthBar.width = (enemy.health*enemy.width)/enemy.maxHealth;
         }
+        console.log(enemy.health);
+        console.log(enemy.healthBar.width)
+        //implement bounce
     }
 }
-
+function enemyHitPlayer(sword, player)
+{
+    if(player.health < 0)
+    {
+        Player.sword.kill();
+        player.kill();
+        Player.healthBar.kill();
+    }else{
+        // player.health--;
+        Player.healthBar.width = (player.health*player.width)/player.maxHealth;
+    }
+}
 function UpdateNPCs()
 {
     if(game.time.now  > nextExecutionTime)
@@ -336,4 +434,13 @@ function UpdateNPCs()
                 }
             });
         }
+}
+function saveGame()
+{
+    //save inventory
+    // createCookie('inventory',playerInventory,30)
+    
+}
+window.onbeforeunload = function() {
+    saveInventory();
 }
