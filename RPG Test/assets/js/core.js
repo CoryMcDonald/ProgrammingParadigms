@@ -15,10 +15,11 @@ function preload()
     //Player
     game.load.image('player', 'assets/pics/player.gif');
     game.load.image('001', 'assets/pics/sword.png');
-    
+    game.load.image('011', 'assets/pics/seed.png');
     
     //GUI
     game.load.image('button', 'assets/pics/button.gif');
+    game.load.image('option', 'assets/pics/option.gif');
     game.load.image('playerEquipedSprite', 'assets/pics/playerEquipedSprite.gif');
     game.load.image('healthBar', 'assets/pics/healthBar.png');
     
@@ -84,7 +85,7 @@ function createEnemies()
         currentEnemy.originX = originX;
         currentEnemy.originY = originY;
         
-        currentEnemy.sword = game.add.sprite(originX, originY, 'sword');
+        currentEnemy.sword = game.add.sprite(originX, originY, '001');
         currentEnemy.sword.width = 32;
         currentEnemy.sword.swingTime = 0;
         currentEnemy.sword.hold = 50;
@@ -162,12 +163,15 @@ function update()
         
     }else if(game.input.keyboard.isDown(Phaser.Keyboard.ESC))
     {
-        console.log('exiting inventory')
-        gamePaused = false;
-        inventoryGroup.destroy();
-        
+        exitInventory();
     }
     
+}
+function exitInventory()
+{
+    console.log('exiting inventory')
+    gamePaused = false;
+    inventoryGroup.destroy();
 }
 function collision(player, obj2)
 {

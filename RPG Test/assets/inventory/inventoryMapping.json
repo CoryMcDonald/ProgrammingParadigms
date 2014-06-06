@@ -1,12 +1,13 @@
 {
-    "001": "Poor Sword",
-    "002": "Average Sword",
-    "003": "Good Sword",
-    "004": "Great Sword",
-    "005": "Amazing Sword",
-    "006": "Poor Sheild",
-    "007": "Average Shield",
-    "008": "Good Shield",
-    "009": "Great Shield",
-    "010": "Amazing Shield"
+    "001": { "name" : "Poor Sword", "action": "weapon"},
+    "002": { "name" : "Average Sword", "action": "weapon" },
+    "003": { "name" : "Good Sword", "action": "weapon" },
+    "004": { "name" : "Great Sword", "action": "weapon" },
+    "005": { "name" : "Amazing Sword", "action": "weapon" },
+    "006": { "name" : "Poor Sheild", "action": "weapon" },
+    "007": { "name" : "Average Shield", "action": "weapon" },
+    "008": { "name" : "Good Shield", "action": "weapon" },
+    "009": { "name" : "Great Shield", "action": "weapon" },
+    "010": { "name" : "Amazing Shield", "action": "weapon" },
+    "011": { "name" : "Seeds", "action":["farm", "eat"] }
 }
